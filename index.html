@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0C6B74">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="다낭 여행">
+<meta name="robots" content="noindex, nofollow">
+<title>다낭 가족여행</title>
+
+<!--
+  ============================================================
+  다낭 가족여행 일정표 (단일 파일 / 외부 연결 없음 / 오프라인 동작)
+
+  ▸ 고칠 곳은 아래 TRIP 객체 한 군데뿐입니다. (스크립트 맨 위)
+  ▸ 지금 들어있는 날짜·항공편·예약번호는 전부 예시입니다.
+  ▸ 이 파일 하나만 카톡으로 보내거나 폰에 저장하면 그대로 열립니다.
+  ============================================================
+-->
+
+<style>
+/* ---------- 색 ---------- */
+:root{
+  --paper:#F3F6F5;
+  --card:#FFFFFF;
+  --ink:#0B2B2F;
+  --ink2:#546F72;
+  --line:#DDE7E5;
+  --sea:#0C6B74;
+  --jade:#2A6F51;
+  --lantern:#C2410C;
+  --lantern-hi:#E8590C;
+  --clay:#7A5C3E;
+  --sea-t:#E3F0EF;
+  --jade-t:#E4F0EA;
+  --lantern-t:#FBEBE2;
+  --clay-t:#F2ECE3;
+  --shadow:0 1px 2px rgba(11,43,47,.06);
+  --r:14px;
+  --tabh:66px;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#0C1A1C;
+    --card:#152729;
+    --ink:#EBF3F2;
+    --ink2:#9FB6B6;
+    --line:#25403F;
+    --sea:#63BFC6;
+    --jade:#74C79B;
+    --lantern:#F5904F;
+    --lantern-hi:#FF8A3D;
+    --clay:#C7A67B;
+    --sea-t:#123A3D;
+    --jade-t:#16332A;
+    --lantern-t:#3B2517;
+    --clay-t:#33291D;
+    --shadow:none;
+  }
+}
+
+/* ---------- 기본 ---------- */
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard","Noto Sans KR","Malgun Gothic",system-ui,sans-serif;
+  font-size:17px;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  padding-bottom:calc(var(--tabh) + env(safe-area-inset-bottom));
+  overscroll-behavior-y:none;
+}
+h1,h2,h3,p,ul,ol{margin:0}
+button{font:inherit;color:inherit;background:none;border:none;padding:0;cursor:pointer}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--sea);outline-offset:2px;border-radius:6px}
+.num{font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+
+/* ---------- 헤더 ---------- */
+.hd{
+  background:var(--sea);
+  color:#fff;
+  padding:calc(env(safe-area-inset-top) + 14px) 18px 16px;
+}
+.hd > *{max-width:620px;margin-left:auto;margin-right:auto}
+@media (prefers-color-scheme: dark){
+  .hd{background:#0E2E32;color:var(--ink)}
+}
+.hd-row{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+.hd-title{font-size:22px;font-weight:800;letter-spacing:-.03em;line-height:1.2}
+.hd-sub{font-size:13.5px;opacity:.85;margin-top:3px;letter-spacing:-.01em}
+.clock{text-align:right;flex:none;line-height:1.25}
+.clock-city{display:block;font-size:11px;letter-spacing:.14em;opacity:.7;text-transform:uppercase}
+.clock-main{font-size:26px;font-weight:800;letter-spacing:-.03em}
+.clock-kr{display:block;font-size:12px;opacity:.75;margin-top:1px}
+.dday{
+  margin-top:12px;
+  background:rgba(255,255,255,.16);
+  border-radius:10px;
+  padding:9px 13px;
+  font-size:14.5px;
+  font-weight:600;
+  letter-spacing:-.01em;
+}
+@media (prefers-color-scheme: dark){ .dday{background:rgba(255,255,255,.08)} }
+
+/* ---------- 날짜 바 ---------- */
+.daybar{
+  position:sticky;z-index:25;
+  top:0;
+  background:var(--paper);
+  border-bottom:1px solid var(--line);
+  padding:10px 0 10px;
+}
+.daybar-scroll{
+  display:flex;gap:8px;
+  overflow-x:auto;
+  padding:0 16px;
+  scroll-snap-type:x proximity;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+.daybar-scroll::-webkit-scrollbar{display:none}
+.daychip{
+  flex:none;scroll-snap-align:center;
+  min-width:74px;
+  padding:9px 14px;
+  border-radius:12px;
+  background:var(--card);
+  border:1.5px solid var(--line);
+  text-align:center;
+  line-height:1.3;
+  transition:background .15s,border-color .15s;
+}
+.daychip b{display:block;font-size:15px;font-weight:700;letter-spacing:-.02em}
+.daychip span{display:block;font-size:12.5px;color:var(--ink2);margin-top:1px}
+.daychip[aria-current="true"]{
+  background:var(--sea);
+  border-color:var(--sea);
+  color:#fff;
+}
+.daychip[aria-current="true"] span{color:rgba(255,255,255,.85)}
+@media (prefers-color-scheme: dark){
+  .daychip[aria-current="true"]{background:var(--sea);color:#08211F}
+  .daychip[aria-current="true"] span{color:rgba(8,33,31,.75)}
+}
+.daychip.is-today::after{
+  content:"오늘";
+  display:block;font-size:10px;font-weight:700;
+  letter-spacing:.06em;color:var(--lantern);margin-top:2px;
+}
+.daychip[aria-current="true"].is-today::after{color:inherit;opacity:.9}
+
+/* ---------- 본문 ---------- */
+main{padding:0 16px}
+.day-head{padding:20px 2px 14px}
+.day-head h2{font-size:26px;font-weight:800;letter-spacing:-.035em;line-height:1.2}
+.day-head p{font-size:14.5px;color:var(--ink2);margin-top:4px}
+
+/* ---------- 타임라인 ---------- */
+.tl{position:relative;padding-bottom:8px}
+.tl::before{
+  content:"";position:absolute;
+  left:65px;top:10px;bottom:26px;width:2px;
+  background:var(--line);border-radius:2px;
+}
+.ti{
+  display:grid;
+  grid-template-columns:56px 20px 1fr;
+  align-items:start;
+  margin-bottom:14px;
+}
+.ti-time{
+  padding-top:12px;
+  font-size:16px;font-weight:700;
+  letter-spacing:-.02em;
+  font-variant-numeric:tabular-nums;
+  text-align:right;
+  padding-right:2px;
+}
+.ti-next{display:block;font-size:10.5px;font-weight:700;color:var(--lantern);letter-spacing:-.01em}
+.ti-dot{
+  position:relative;height:100%;
+}
+.ti-dot::before{
+  content:"";position:absolute;
+  left:50%;top:17px;transform:translateX(-50%);
+  width:13px;height:13px;border-radius:50%;
+  background:var(--sea);
+  box-shadow:0 0 0 4px var(--paper);
+}
+.ti-card{
+  background:var(--card);
+  border:1.5px solid var(--line);
+  border-radius:var(--r);
+  padding:12px 14px 13px;
+  box-shadow:var(--shadow);
+}
+.ti-card h3{font-size:18.5px;font-weight:700;letter-spacing:-.025em;line-height:1.35}
+.ti-vi{font-size:14px;color:var(--ink2);margin-top:2px;letter-spacing:-.005em}
+.ti-note{
+  font-size:14.5px;color:var(--ink2);
+  margin-top:7px;padding-top:7px;
+  border-top:1px dashed var(--line);
+  letter-spacing:-.01em;
+}
+.chip{
+  display:inline-block;
+  font-size:12px;font-weight:700;
+  letter-spacing:.02em;
+  padding:3px 9px;border-radius:999px;
+  margin-bottom:6px;
+}
+
+/* 종류별 색 */
+.ti[data-kind="이동"] .ti-dot::before{background:var(--sea)}
+.ti[data-kind="이동"] .chip{background:var(--sea-t);color:var(--sea)}
+.ti[data-kind="관광"] .ti-dot::before{background:var(--jade)}
+.ti[data-kind="관광"] .chip{background:var(--jade-t);color:var(--jade)}
+.ti[data-kind="식사"] .ti-dot::before{background:var(--lantern)}
+.ti[data-kind="식사"] .chip{background:var(--lantern-t);color:var(--lantern)}
+.ti[data-kind="휴식"] .ti-dot::before{background:var(--clay)}
+.ti[data-kind="휴식"] .chip{background:var(--clay-t);color:var(--clay)}
+.ti[data-kind="숙소"] .ti-dot::before{background:var(--clay)}
+.ti[data-kind="숙소"] .chip{background:var(--clay-t);color:var(--clay)}
+
+/* 지난 일정 */
+.ti.is-past{opacity:.62}
+/* 진행 중 — 이 페이지에서 가장 눈에 띄는 단 하나 */
+.ti.is-now .ti-card{
+  border-color:var(--lantern-hi);
+  border-width:2px;
+  background:var(--lantern-t);
+}
+.ti.is-now .ti-dot::before{
+  background:var(--lantern-hi);
+  width:15px;height:15px;
+  box-shadow:0 0 0 4px var(--paper),0 0 0 7px var(--lantern-t);
+}
+.ti.is-now .ti-time{color:var(--lantern)}
+
+/* 현재 시각 선 */
+.nowline{
+  display:flex;align-items:center;gap:8px;
+  margin:2px 0 16px;
+}
+.nowline-tag{
+  flex:none;
+  font-size:12px;font-weight:800;letter-spacing:-.01em;
+  color:#fff;background:var(--lantern-hi);
+  padding:3px 9px;border-radius:999px;
+  font-variant-numeric:tabular-nums;
+}
+.nowline-rule{flex:1;height:2px;background:var(--lantern-hi);border-radius:2px;opacity:.55}
+
+/* ---------- 버튼 ---------- */
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:11px}
+.btn{
+  display:inline-flex;align-items:center;gap:6px;
+  min-height:42px;padding:0 14px;
+  border-radius:11px;
+  border:1.5px solid var(--line);
+  background:var(--card);
+  font-size:14.5px;font-weight:650;
+  letter-spacing:-.015em;
+  text-decoration:none;
+}
+.btn:active{background:var(--sea-t)}
+.btn-solid{background:var(--sea);border-color:var(--sea);color:#fff}
+@media (prefers-color-scheme: dark){ .btn-solid{color:#08211F} }
+.btn svg{width:17px;height:17px;flex:none}
+
+/* ---------- 카드 공통 ---------- */
+.sec-head{
+  padding:22px 2px 10px;
+  font-size:13px;font-weight:800;
+  letter-spacing:.1em;
+  color:var(--ink2);
+}
+.card{
+  background:var(--card);
+  border:1.5px solid var(--line);
+  border-radius:var(--r);
+  padding:15px 16px 16px;
+  margin-bottom:12px;
+  box-shadow:var(--shadow);
+}
+.card h3{font-size:19px;font-weight:750;letter-spacing:-.03em;line-height:1.3}
+.card-vi{font-size:14px;color:var(--ink2);margin-top:2px}
+
+/* 예약 정보 표 */
+.kv{margin-top:12px;border-top:1px solid var(--line)}
+.kv-row{
+  display:flex;align-items:center;gap:12px;
+  padding:9px 0;
+  border-bottom:1px solid var(--line);
+}
+.kv-row:last-child{border-bottom:none}
+.kv-k{flex:none;width:74px;font-size:13.5px;color:var(--ink2);font-weight:600}
+.kv-v{flex:1;font-size:16px;font-weight:650;letter-spacing:-.02em;font-variant-numeric:tabular-nums;word-break:break-all}
+.kv-copy{
+  flex:none;min-height:36px;padding:0 11px;
+  border-radius:9px;background:var(--sea-t);color:var(--sea);
+  font-size:13px;font-weight:750;
+}
+.kv-copy:active{opacity:.7}
+
+/* 주소 줄 */
+.addr{
+  margin-top:11px;padding:10px 12px;
+  background:var(--paper);
+  border-radius:10px;
+  font-size:14.5px;
+  line-height:1.5;
+  letter-spacing:-.005em;
+}
+@media (prefers-color-scheme: dark){ .addr{background:rgba(255,255,255,.04)} }
+.tipline{
+  margin-top:10px;font-size:14.5px;color:var(--ink2);
+  letter-spacing:-.01em;
+}
+
+/* ---------- 준비물 ---------- */
+.prog{
+  background:var(--card);border:1.5px solid var(--line);
+  border-radius:var(--r);padding:14px 16px;margin:18px 0 6px;
+}
+.prog-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px}
+.prog-top b{font-size:17px;font-weight:750;letter-spacing:-.02em}
+.prog-top span{font-size:14px;color:var(--ink2);font-variant-numeric:tabular-nums}
+.prog-bar{height:9px;border-radius:99px;background:var(--line);overflow:hidden}
+.prog-fill{height:100%;background:var(--sea);border-radius:99px;transition:width .25s ease}
+.chk{
+  display:flex;align-items:flex-start;gap:12px;
+  width:100%;text-align:left;
+  padding:12px 4px;
+  border-bottom:1px solid var(--line);
+}
+.chk:last-child{border-bottom:none}
+.chk-box{
+  flex:none;width:26px;height:26px;margin-top:1px;
+  border:2px solid var(--line);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+}
+.chk-box svg{width:16px;height:16px;opacity:0;color:#fff}
+.chk-txt{flex:1;font-size:16.5px;letter-spacing:-.02em;line-height:1.45}
+.chk[aria-pressed="true"] .chk-box{background:var(--sea);border-color:var(--sea)}
+.chk[aria-pressed="true"] .chk-box svg{opacity:1}
+@media (prefers-color-scheme: dark){ .chk[aria-pressed="true"] .chk-box svg{color:#08211F} }
+.chk[aria-pressed="true"] .chk-txt{color:var(--ink2);text-decoration:line-through;text-decoration-thickness:1.5px}
+
+.facts{list-style:none;padding:0}
+.facts li{
+  padding:10px 0;border-bottom:1px solid var(--line);
+  font-size:15.5px;letter-spacing:-.015em;line-height:1.5;
+}
+.facts li:last-child{border-bottom:none}
+.facts b{font-weight:750}
+.phrase{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+.phrase span{color:var(--ink2);font-size:14.5px;flex:none;text-align:right}
+
+/* ---------- 하단 탭 ---------- */
+.tabs{
+  position:fixed;left:0;right:0;bottom:0;z-index:40;
+  display:grid;grid-template-columns:repeat(4,1fr);
+  background:var(--card);
+  border-top:1px solid var(--line);
+  padding-bottom:env(safe-area-inset-bottom);
+}
+.tab{
+  height:var(--tabh);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  color:var(--ink2);
+}
+.tab svg{width:24px;height:24px}
+.tab span{font-size:12px;font-weight:700;letter-spacing:-.02em}
+.tab[aria-current="true"]{color:var(--sea)}
+
+/* ---------- 주소 오버레이 ---------- */
+.sheet{
+  position:fixed;inset:0;z-index:60;
+  background:var(--sea);color:#fff;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:28px 24px calc(28px + env(safe-area-inset-bottom));
+  text-align:center;
+}
+.sheet[hidden]{display:none}
+.sheet-eyebrow{font-size:13px;letter-spacing:.1em;opacity:.75;margin-bottom:18px}
+.sheet-name{font-size:30px;font-weight:800;letter-spacing:-.03em;line-height:1.25}
+.sheet-addr{font-size:23px;line-height:1.45;margin-top:16px;font-weight:600}
+.sheet-hint{margin-top:32px;font-size:14px;opacity:.7}
+.sheet-close{
+  margin-top:26px;align-self:center;
+  min-height:48px;padding:0 26px;border-radius:12px;
+  background:rgba(255,255,255,.18);
+  font-size:16px;font-weight:700;
+}
+
+/* ---------- 토스트 ---------- */
+.toast{
+  position:fixed;left:50%;transform:translateX(-50%);
+  bottom:calc(var(--tabh) + env(safe-area-inset-bottom) + 16px);
+  z-index:70;
+  background:var(--ink);color:var(--paper);
+  padding:11px 18px;border-radius:999px;
+  font-size:14.5px;font-weight:650;letter-spacing:-.015em;
+  opacity:0;pointer-events:none;
+  transition:opacity .2s;
+  max-width:88vw;text-align:center;
+}
+.toast.on{opacity:1}
+
+footer{
+  padding:26px 4px 20px;
+  font-size:13px;color:var(--ink2);text-align:center;line-height:1.6;
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{transition:none !important;animation:none !important;scroll-behavior:auto !important}
+}
+@media (min-width:640px){
+  body{font-size:18px}
+  main,.daybar-scroll{max-width:620px;margin-left:auto;margin-right:auto}
+}
+</style>
+</head>
+<body>
+
+<header class="hd">
+  <div class="hd-row">
+    <div>
+      <h1 class="hd-title" id="hdTitle">다낭 가족여행</h1>
+      <p class="hd-sub" id="hdSub"></p>
+    </div>
+    <div class="clock">
+      <span class="clock-city">Đà Nẵng</span>
+      <div class="clock-main num" id="clockDad">--:--</div>
+      <span class="clock-kr">한국 <b class="num" id="clockKst">--:--</b></span>
+    </div>
+  </div>
+  <div class="dday" id="dday"></div>
+</header>
+
+<div class="daybar" id="daybar">
+  <div class="daybar-scroll" id="daybarScroll"></div>
+</div>
+
+<main>
+  <section id="tab-plan">
+    <div class="day-head">
+      <h2 id="dayTitle"></h2>
+      <p id="dayMeta"></p>
+    </div>
+    <div class="tl" id="timeline"></div>
+  </section>
+
+  <section id="tab-book" hidden></section>
+  <section id="tab-place" hidden></section>
+  <section id="tab-prep" hidden></section>
+
+  <footer id="foot"></footer>
+</main>
+
+<nav class="tabs" id="tabs" aria-label="화면 이동">
+  <button class="tab" data-tab="plan" aria-current="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+    <span>일정</span>
+  </button>
+  <button class="tab" data-tab="book">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5A2.5 2.5 0 0 1 5.5 6h13A2.5 2.5 0 0 1 21 8.5v1.7a2 2 0 0 0 0 3.6v1.7A2.5 2.5 0 0 1 18.5 18h-13A2.5 2.5 0 0 1 3 15.5v-1.7a2 2 0 0 0 0-3.6z"/><path d="M14 7v10" stroke-dasharray="2.5 2.8"/></svg>
+    <span>예약</span>
+  </button>
+  <button class="tab" data-tab="place">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21.5s7-6.6 7-11.5a7 7 0 1 0-14 0c0 4.9 7 11.5 7 11.5z"/><circle cx="12" cy="10" r="2.6"/></svg>
+    <span>장소</span>
+  </button>
+  <button class="tab" data-tab="prep">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="3.5"/><path d="M8 12.4l2.7 2.7L16.5 9.4"/></svg>
+    <span>준비물</span>
+  </button>
+</nav>
+
+<div class="sheet" id="sheet" hidden>
+  <div>
+    <p class="sheet-eyebrow">기사님께 보여주세요</p>
+    <p class="sheet-name" id="sheetName"></p>
+    <p class="sheet-addr" id="sheetAddr"></p>
+    <p class="sheet-hint">Cho tôi đến đây, cảm ơn.<br>(여기로 가주세요, 감사합니다)</p>
+  </div>
+  <button class="sheet-close" id="sheetClose">닫기</button>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ============================================================
+   여기부터 여행 정보. 이 객체만 고치면 화면 전체가 바뀝니다.
+   (지금 값은 전부 예시입니다 — 실제 정보로 바꿔주세요)
+   ============================================================ */
+const TRIP = {
+  title: "다낭 가족여행",
+  people: "어른 2 · 아이 2",
+  nights: "3박 5일",
+
+  /* kind는 이동 / 관광 / 식사 / 휴식 / 숙소 중 하나 */
+  days: [
+    {
+      date: "2026-09-24", dow: "목", theme: "출발",
+      items: [
+        { time:"15:30", kind:"이동", title:"인천공항 제1터미널 3층 집결", vi:"", note:"출발 3시간 전 도착. M카운터 앞에서 만나기" },
+        { time:"18:30", kind:"이동", title:"인천 → 다낭 (VN431)", vi:"", note:"비행 약 4시간 40분 · 기내식 나옴" },
+        { time:"22:10", kind:"이동", title:"다낭 국제공항 도착 · 입국심사", vi:"Sân bay Quốc tế Đà Nẵng", note:"한국인 45일 무비자. 입국신고서 없음, 여권만 준비", map:"Sân bay Quốc tế Đà Nẵng" },
+        { time:"23:00", kind:"이동", title:"픽업 차량으로 호텔 이동", vi:"", note:"7인승 예약 완료. 도착층 출구에서 이름표 확인 (약 15분)" },
+        { time:"23:40", kind:"숙소", title:"호텔 체크인", vi:"", note:"늦은 체크인 미리 알려둠. 생수는 프런트에서 받기" }
+      ]
+    },
+    {
+      date: "2026-09-25", dow: "금", theme: "바다와 시내",
+      items: [
+        { time:"07:30", kind:"식사", title:"호텔 조식", vi:"", note:"오전 6:30–10:00 운영" },
+        { time:"09:30", kind:"관광", title:"미케비치 산책", vi:"Bãi biển Mỹ Khê", note:"파라솔·튜브 대여 가능. 오전이 덜 뜨거움", map:"Bãi biển Mỹ Khê, Đà Nẵng" },
+        { time:"11:30", kind:"식사", title:"반쎄오 바즈엉", vi:"Bánh Xèo Bà Dưỡng", note:"골목 안쪽. 1인 2~3장이면 충분", map:"Bánh Xèo Bà Dưỡng, Đà Nẵng" },
+        { time:"13:30", kind:"휴식", title:"호텔 수영장 · 낮잠", vi:"", note:"한낮은 쉬는 시간. 아이들 물놀이" },
+        { time:"16:00", kind:"관광", title:"린응사 (해수관음상)", vi:"Chùa Linh Ứng", note:"어깨·무릎 가리는 옷. 다낭 시내 전망 좋음", map:"Chùa Linh Ứng, Sơn Trà, Đà Nẵng" },
+        { time:"18:30", kind:"식사", title:"마담런 베트남 가정식", vi:"Madame Lân", note:"한강변. 사람 많으니 예약 또는 이른 도착", map:"Madame Lân, Đà Nẵng" },
+        { time:"20:00", kind:"관광", title:"한시장 · 야시장 구경", vi:"Chợ Hàn", note:"흥정 필수. 부르는 값의 절반부터", map:"Chợ Hàn, Đà Nẵng" }
+      ]
+    },
+    {
+      date: "2026-09-26", dow: "토", theme: "바나힐 하루",
+      items: [
+        { time:"06:30", kind:"식사", title:"호텔 조식 (일찍)", vi:"", note:"사람 몰리기 전에 올라가는 게 관건" },
+        { time:"07:30", kind:"이동", title:"바나힐로 출발", vi:"Bà Nà Hills", note:"차량 약 50분. 산 위는 서늘하니 겉옷 챙기기", map:"Bà Nà Hills, Đà Nẵng" },
+        { time:"09:00", kind:"관광", title:"케이블카 · 골든브릿지", vi:"Cầu Vàng", note:"오전에 사진 찍는 게 덜 붐빔", map:"Cầu Vàng Bà Nà Hills" },
+        { time:"11:00", kind:"관광", title:"프랑스 마을 · 정원", vi:"Làng Pháp", note:"실내 공간 많아 더울 때 피신하기 좋음" },
+        { time:"12:30", kind:"식사", title:"바나힐 뷔페 점심", vi:"", note:"티켓에 포함된 식사권 확인" },
+        { time:"15:00", kind:"관광", title:"판타지파크 (실내 놀이시설)", vi:"Fantasy Park", note:"아이들 위주. 어른은 카페에서 대기 가능" },
+        { time:"16:30", kind:"이동", title:"하산 · 다낭 복귀", vi:"", note:"막차 시간 미리 확인. 하산 줄이 길 수 있음" },
+        { time:"18:30", kind:"식사", title:"미케비치 씨푸드", vi:"", note:"수족관에서 고른 뒤 kg 단위 가격 먼저 확인" },
+        { time:"20:30", kind:"휴식", title:"발마사지 90분", vi:"", note:"예약 완료. 팁 5만~10만동 정도" }
+      ]
+    },
+    {
+      date: "2026-09-27", dow: "일", theme: "호이안 그리고 불쇼",
+      items: [
+        { time:"08:00", kind:"식사", title:"호텔 조식", vi:"", note:"" },
+        { time:"09:30", kind:"이동", title:"호이안으로 출발", vi:"Hội An", note:"차량 약 45분. 그랩 또는 택시" },
+        { time:"10:30", kind:"관광", title:"호이안 올드타운", vi:"Phố cổ Hội An", note:"통합 입장권 12만동. 낮에는 그늘 위주로", map:"Phố cổ Hội An, Quảng Nam" },
+        { time:"12:30", kind:"식사", title:"까오러우 · 화이트로즈", vi:"Cao lầu, Bánh bao bánh vạc", note:"호이안에서만 먹는 음식" },
+        { time:"14:00", kind:"관광", title:"투본강 코코넛배 · 소원등", vi:"Sông Thu Bồn", note:"흥정 후 탑승. 구명조끼 확인" },
+        { time:"16:00", kind:"이동", title:"다낭 복귀 · 호텔 휴식", vi:"", note:"저녁 일정 있으니 한 번 씻고 나가기" },
+        { time:"18:30", kind:"식사", title:"한강변 저녁", vi:"", note:"불쇼 자리 잡으려면 조금 서두르기" },
+        { time:"20:15", kind:"관광", title:"용다리 앞 자리 잡기", vi:"Cầu Rồng", note:"동쪽 강변이 잘 보임. 물 뿜을 때 앞줄은 젖음", map:"Cầu Rồng, Đà Nẵng" },
+        { time:"21:00", kind:"관광", title:"용다리 불쇼", vi:"", note:"토·일 21:00, 약 15분. 불 → 물 순서" }
+      ]
+    },
+    {
+      date: "2026-09-28", dow: "월", theme: "귀국",
+      items: [
+        { time:"08:00", kind:"식사", title:"호텔 조식", vi:"", note:"" },
+        { time:"09:30", kind:"휴식", title:"짐 싸기 · 늦은 체크아웃", vi:"", note:"레이트 체크아웃 가능한지 프런트에 확인" },
+        { time:"11:00", kind:"관광", title:"롯데마트 기념품 쇼핑", vi:"Lotte Mart Đà Nẵng", note:"커피·망고칩·라면. 액체류는 부칠 짐에", map:"Lotte Mart Đà Nẵng" },
+        { time:"13:00", kind:"식사", title:"마지막 점심 (미꽝 / 분짜까)", vi:"Mì Quảng", note:"" },
+        { time:"15:00", kind:"휴식", title:"호텔에서 짐 찾기 · 샤워", vi:"", note:"체크아웃 후에도 샤워룸 쓸 수 있는지 확인" },
+        { time:"15:30", kind:"이동", title:"공항으로 출발", vi:"", note:"국제선은 3시간 전 도착 권장" },
+        { time:"18:00", kind:"이동", title:"다낭 → 인천 (VN430)", vi:"", note:"택스리펀 있으면 체크인 전에 처리" },
+        { time:"00:40", kind:"이동", title:"인천공항 도착", vi:"", note:"공항철도 첫차 05:20. 심야버스 또는 대기 확인", nextDay:true }
+      ]
+    }
+  ],
+
+  bookings: [
+    { type:"항공", title:"베트남항공 왕복", sub:"VN431 / VN430",
+      rows:[["예약번호","ABCD12",true],["가는 편","9/24 (목) 18:30 ICN → 22:10 DAD",false],["오는 편","9/28 (월) 18:00 DAD → 00:40 ICN",false],["인원","어른 2 · 소아 2",false],["수하물","1인 23kg × 1개",false]],
+      tip:"출발 24시간 전부터 온라인 체크인 가능" },
+    { type:"숙소", title:"다낭 미케비치 리조트", sub:"Đà Nẵng Mỹ Khê Resort",
+      rows:[["예약번호","HTL-8842190",true],["기간","9/24 – 9/28 · 3박",false],["객실","디럭스 트윈 2실 · 조식 포함",false],["전화","+84 236 3xx xxxx",true]],
+      addr:"Võ Nguyên Giáp, Phước Mỹ, Sơn Trà, Đà Nẵng",
+      tip:"늦은 체크인(23:40) 사전 통보 완료" },
+    { type:"차량", title:"공항 픽업 · 샌딩 왕복", sub:"7인승",
+      rows:[["예약번호","PICK-2291",true],["픽업","9/24 (목) 22:40 · 도착층 출구",false],["샌딩","9/28 (월) 15:30 · 호텔 로비",false],["기사 연락","+84 9xx xxx xxx",true]],
+      tip:"도착층에서 이름표 든 기사 찾기. 안 보이면 바로 전화" },
+    { type:"투어", title:"바나힐 케이블카 티켓", sub:"4매 · 뷔페 포함",
+      rows:[["바우처","BNH-77120",true],["사용일","9/26 (토)",false],["포함","왕복 케이블카 · 점심 뷔페 · 판타지파크",false]],
+      tip:"입장 게이트에서 바우처 번호와 여권 확인" },
+    { type:"마사지", title:"발마사지 90분 · 4인", sub:"",
+      rows:[["예약번호","SPA-3310",true],["일시","9/26 (토) 20:30",false]],
+      tip:"팁은 1인 5만~10만동 정도가 보통" }
+  ],
+
+  emergency: [
+    ["주다낭 대한민국 총영사관","+84-236-3563-016"],
+    ["긴급 (경찰)","113"],
+    ["긴급 (구급)","115"],
+    ["영사콜센터 (24시간)","+82-2-3210-0404"]
+  ],
+
+  placeGroups: [
+    { name:"가볼 곳", items:[
+      { ko:"미케비치", vi:"Bãi biển Mỹ Khê", addr:"Võ Nguyên Giáp, Phước Mỹ, Sơn Trà, Đà Nẵng", tip:"호텔에서 걸어갈 거리. 해질 무렵이 제일 좋음" },
+      { ko:"린응사 (해수관음상)", vi:"Chùa Linh Ứng", addr:"Hoàng Sa, Thọ Quang, Sơn Trà, Đà Nẵng", tip:"무료 입장. 어깨·무릎 가리는 옷" },
+      { ko:"바나힐", vi:"Bà Nà Hills", addr:"Thôn An Sơn, Hòa Ninh, Hòa Vang, Đà Nẵng", tip:"산 위는 10도 가까이 서늘함" },
+      { ko:"오행산 (마블마운틴)", vi:"Ngũ Hành Sơn", addr:"81 Huyền Trân Công Chúa, Hòa Hải, Ngũ Hành Sơn, Đà Nẵng", tip:"엘리베이터 별도 요금. 계단은 가파름" },
+      { ko:"호이안 올드타운", vi:"Phố cổ Hội An", addr:"Minh An, Hội An, Quảng Nam", tip:"통합 입장권 12만동. 밤 등불이 하이라이트" },
+      { ko:"용다리", vi:"Cầu Rồng", addr:"Nguyễn Văn Linh, Hải Châu, Đà Nẵng", tip:"토·일 21:00 불쇼 약 15분" },
+      { ko:"다낭 대성당 (핑크성당)", vi:"Nhà thờ Chính tòa Đà Nẵng", addr:"156 Trần Phú, Hải Châu, Đà Nẵng", tip:"미사 시간엔 내부 관람 제한" }
+    ]},
+    { name:"먹을 곳", items:[
+      { ko:"반쎄오 바즈엉", vi:"Bánh Xèo Bà Dưỡng", addr:"K280/23 Hoàng Diệu, Hải Châu, Đà Nẵng", tip:"골목 깊숙이. 반쎄오 + 넴루이 조합" },
+      { ko:"마담런", vi:"Madame Lân", addr:"4 Bạch Đằng, Thạch Thang, Hải Châu, Đà Nẵng", tip:"메뉴에 사진 있어 주문 쉬움" },
+      { ko:"짠 (반짱꾸온팃헤오)", vi:"Quán Trần", addr:"4 Lê Duẩn, Hải Châu, Đà Nẵng", tip:"돼지고기 라이스페이퍼 쌈. 아이들도 잘 먹음" },
+      { ko:"미꽝 1A", vi:"Mì Quảng 1A", addr:"1 Hải Phòng, Hải Châu, Đà Nẵng", tip:"다낭식 비빔국수. 아침에 열림" },
+      { ko:"콩카페", vi:"Cộng Cà Phê", addr:"96-98 Bạch Đằng, Hải Châu, Đà Nẵng", tip:"코코넛 커피가 대표 메뉴" }
+    ]},
+    { name:"그 밖에", items:[
+      { ko:"한시장", vi:"Chợ Hàn", addr:"119 Trần Phú, Hải Châu 1, Hải Châu, Đà Nẵng", tip:"흥정 필수. 오후 6시쯤 문 닫는 가게 많음" },
+      { ko:"롯데마트 다낭", vi:"Lotte Mart Đà Nẵng", addr:"6 Nại Nam, Hòa Cường Bắc, Hải Châu, Đà Nẵng", tip:"기념품 한 번에. 가격표 그대로라 편함" },
+      { ko:"다낭 국제공항", vi:"Sân bay Quốc tế Đà Nẵng", addr:"Hòa Thuận Tây, Hải Châu, Đà Nẵng", tip:"시내에서 차로 10~15분" }
+    ]}
+  ],
+
+  checklist: [
+    { name:"서류 · 돈", items:["여권 (유효기간 6개월 이상)","항공권 e-티켓 (캡처해두기)","호텔 바우처","여행자보험 증서","미화 달러 (현지 환전용)","신용카드 · 해외결제 열어두기","여권 사본 · 사진 촬영본"] },
+    { name:"전자기기", items:["유심 또는 이심","보조배터리 (기내 휴대만 가능)","충전기 · 케이블","멀티 어댑터","방수팩 (물놀이용)"] },
+    { name:"옷 · 물놀이", items:["수영복 · 래시가드","슬리퍼 · 샌들","모자 · 선글라스","얇은 긴팔 (냉방·햇볕용)","우산 또는 우비","여벌 옷"] },
+    { name:"상비약", items:["지사제 · 소화제","해열진통제","밴드 · 연고","모기 기피제","자외선차단제","멀미약"] },
+    { name:"아이 짐", items:["아이 여권","아이 상비약","물놀이 튜브 · 물안경","간식 · 컵라면","유모차 또는 아기띠"] },
+    { name:"출발 전에 할 일", items:["온라인 체크인","픽업 차량 시간 확정","호텔에 늦은 체크인 알리기","그랩(Grab) 앱 설치 · 카드 등록","환전 또는 현지 ATM 계획","집 문단속 · 가스 잠그기"] }
+  ],
+
+  facts: [
+    ["환율 어림셈","100,000동 ≈ 약 5,500원. <b>0 세 개 빼고 ×55</b>"],
+    ["전압","220V. 한국 플러그 대부분 그대로 꽂힘"],
+    ["팁","의무 아님. 마사지·짐 옮길 때 5만~10만동"],
+    ["물","생수만 마시기. 식당 얼음은 대체로 안전"],
+    ["택시","그랩(Grab) 앱이 가장 속 편함. 요금이 미리 뜸"],
+    ["더위","한낮 12~15시는 실내에서 쉬는 게 정답"]
+  ],
+
+  phrases: [
+    ["Xin chào","안녕하세요 (씬 짜오)"],
+    ["Cảm ơn","감사합니다 (깜 언)"],
+    ["Bao nhiêu tiền?","얼마예요? (바오 니에우 띠엔)"],
+    ["Giảm giá đi","깎아주세요 (잠 자 디)"],
+    ["Tính tiền","계산해주세요 (띤 띠엔)"],
+    ["Không cay","안 맵게요 (콩 까이)"]
+  ]
+};
+
+/* ============================================================
+   여기부터는 화면 그리는 코드. 보통은 고칠 일이 없습니다.
+   ============================================================ */
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
+const mapUrl = q => "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(q);
+
+/* --- 시간 --- */
+function tzNow(tz){
+  const p = {};
+  for (const x of new Intl.DateTimeFormat("en-US", {
+    timeZone: tz, year:"numeric", month:"2-digit", day:"2-digit",
+    hour:"2-digit", minute:"2-digit", hour12:false
+  }).formatToParts(new Date())) p[x.type] = x.value;
+  const hh = p.hour === "24" ? "00" : p.hour;
+  return { date: `${p.year}-${p.month}-${p.day}`, time: `${hh}:${p.minute}` };
+}
+const toMin = t => { const [h, m] = t.split(":").map(Number); return h * 60 + m; };
+const dayDiff = (a, b) => Math.round((Date.parse(b + "T00:00:00Z") - Date.parse(a + "T00:00:00Z")) / 86400000);
+const fmtMD = iso => { const [, m, d] = iso.split("-"); return `${+m}/${+d}`; };
+
+/* --- 상태 --- */
+const state = { tab: "plan", day: 0 };
+const CHECK_KEY = "danang.checklist.v1";
+let checked = new Set();
+try { checked = new Set(JSON.parse(localStorage.getItem(CHECK_KEY) || "[]")); } catch (e) {}
+function saveChecked(){
+  try { localStorage.setItem(CHECK_KEY, JSON.stringify([...checked])); } catch (e) {}
+}
+
+/* --- 토스트 --- */
+let toastTimer;
+function toast(msg){
+  const t = $("#toast");
+  t.textContent = msg;
+  t.classList.add("on");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("on"), 1900);
+}
+
+/* --- 복사 --- */
+async function copyText(text, label){
+  const done = () => toast(`${label} 복사했어요`);
+  try {
+    await navigator.clipboard.writeText(text);
+    return done();
+  } catch (e) {}
+  const ta = document.createElement("textarea");
+  ta.value = text;
+  ta.setAttribute("readonly", "");
+  ta.style.cssText = "position:fixed;top:0;left:0;opacity:0";
+  document.body.appendChild(ta);
+  ta.select();
+  ta.setSelectionRange(0, text.length);
+  let ok = false;
+  try { ok = document.execCommand("copy"); } catch (e) {}
+  ta.remove();
+  ok ? done() : toast("복사가 안 돼요. 글자를 길게 눌러 복사하세요");
+}
+
+/* --- 헤더 --- */
+function renderHeader(){
+  const days = TRIP.days;
+  const first = days[0].date, last = days[days.length - 1].date;
+  $("#hdTitle").textContent = TRIP.title;
+  $("#hdSub").textContent = `${fmtMD(first)} – ${fmtMD(last)} · ${TRIP.nights} · ${TRIP.people}`;
+}
+
+function tickClock(){
+  const dad = tzNow("Asia/Ho_Chi_Minh");
+  const kst = tzNow("Asia/Seoul");
+  $("#clockDad").textContent = dad.time;
+  $("#clockKst").textContent = kst.time;
+
+  const days = TRIP.days;
+  const idx = days.findIndex(d => d.date === dad.date);
+  const el = $("#dday");
+  if (idx >= 0) {
+    el.textContent = `여행 ${idx + 1}일차 · ${days[idx].theme}`;
+  } else {
+    const left = dayDiff(dad.date, days[0].date);
+    el.textContent = left > 0
+      ? `출발까지 ${left}일 남았어요`
+      : `다녀왔습니다 · ${fmtMD(days[0].date)} – ${fmtMD(days[days.length - 1].date)}`;
+  }
+  return dad;
+}
+
+/* --- 일정 --- */
+function renderDaybar(){
+  const today = tzNow("Asia/Ho_Chi_Minh").date;
+  $("#daybarScroll").innerHTML = TRIP.days.map((d, i) => `
+    <button class="daychip${d.date === today ? " is-today" : ""}" data-day="${i}" aria-current="${i === state.day}">
+      <b>Day ${i + 1}</b><span class="num">${fmtMD(d.date)} ${esc(d.dow)}</span>
+    </button>`).join("");
+}
+
+function renderTimeline(){
+  const d = TRIP.days[state.day];
+  const now = tzNow("Asia/Ho_Chi_Minh");
+  const isToday = d.date === now.date;
+  const nowMin = toMin(now.time);
+
+  $("#dayTitle").textContent = `Day ${state.day + 1} · ${d.theme}`;
+  $("#dayMeta").textContent = `${d.date.replace(/-/g, ".")} ${d.dow}요일 · 일정 ${d.items.length}개`;
+
+  const mins = d.items.map(it => toMin(it.time) + (it.nextDay ? 1440 : 0));
+  let nowIdx = -1, curIdx = -1;
+  if (isToday) {
+    nowIdx = mins.findIndex(m => m > nowMin);
+    if (nowIdx === -1) nowIdx = d.items.length;
+    curIdx = nowIdx - 1;
+  }
+
+  const rows = [];
+  d.items.forEach((it, i) => {
+    if (i === nowIdx) rows.push(nowRow(now.time));
+    const cls = isToday ? (i === curIdx ? " is-now" : (i < curIdx ? " is-past" : "")) : "";
+    rows.push(`
+      <div class="ti${cls}" data-kind="${esc(it.kind)}">
+        <div class="ti-time">${esc(it.time)}${it.nextDay ? '<span class="ti-next">다음날</span>' : ""}</div>
+        <div class="ti-dot"></div>
+        <div class="ti-card">
+          <span class="chip">${esc(it.kind)}</span>
+          <h3>${esc(it.title)}</h3>
+          ${it.vi ? `<p class="ti-vi">${esc(it.vi)}</p>` : ""}
+          ${it.note ? `<p class="ti-note">${esc(it.note)}</p>` : ""}
+          ${it.map ? `<div class="acts"><a class="btn" href="${esc(mapUrl(it.map))}" target="_blank" rel="noopener">${pinSvg()}지도에서 보기</a></div>` : ""}
+        </div>
+      </div>`);
+  });
+  if (isToday && nowIdx === d.items.length) rows.push(nowRow(now.time));
+
+  $("#timeline").innerHTML = rows.join("");
+}
+const nowRow = t => `<div class="nowline"><span class="nowline-tag">지금 ${esc(t)}</span><span class="nowline-rule"></span></div>`;
+const pinSvg = () => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21.5s7-6.6 7-11.5a7 7 0 1 0-14 0c0 4.9 7 11.5 7 11.5z"/><circle cx="12" cy="10" r="2.6"/></svg>`;
+const copySvg = () => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M6 15H4.5A1.5 1.5 0 0 1 3 13.5v-9A1.5 1.5 0 0 1 4.5 3h9A1.5 1.5 0 0 1 15 4.5V6"/></svg>`;
+
+/* --- 예약 --- */
+function renderBookings(){
+  const cards = TRIP.bookings.map(b => `
+    <div class="card">
+      <span class="chip" style="background:var(--sea-t);color:var(--sea)">${esc(b.type)}</span>
+      <h3>${esc(b.title)}</h3>
+      ${b.sub ? `<p class="card-vi">${esc(b.sub)}</p>` : ""}
+      <div class="kv">
+        ${b.rows.map(([k, v, copy]) => `
+          <div class="kv-row">
+            <span class="kv-k">${esc(k)}</span>
+            <span class="kv-v">${esc(v)}</span>
+            ${copy ? `<button class="kv-copy" data-copy="${esc(v)}" data-label="${esc(k)}">복사</button>` : ""}
+          </div>`).join("")}
+      </div>
+      ${b.addr ? `<div class="addr">${esc(b.addr)}</div>
+        <div class="acts">
+          <a class="btn" href="${esc(mapUrl(b.addr))}" target="_blank" rel="noopener">${pinSvg()}지도</a>
+          <button class="btn" data-copy="${esc(b.addr)}" data-label="주소">${copySvg()}주소 복사</button>
+        </div>` : ""}
+      ${b.tip ? `<p class="tipline">${esc(b.tip)}</p>` : ""}
+    </div>`).join("");
+
+  const emg = `
+    <div class="sec-head">문제가 생기면</div>
+    <div class="card">
+      <div class="kv" style="margin-top:0;border-top:none">
+        ${TRIP.emergency.map(([k, v]) => `
+          <div class="kv-row">
+            <span class="kv-k" style="width:auto;flex:1">${esc(k)}</span>
+            <a class="kv-copy" href="tel:${esc(v.replace(/[^+\d]/g, ""))}">${esc(v)}</a>
+          </div>`).join("")}
+      </div>
+      <p class="tipline">여권을 잃어버리면 총영사관에서 여행증명서를 받아 귀국할 수 있습니다.</p>
+    </div>`;
+
+  $("#tab-book").innerHTML = `<div class="sec-head">예약 확인</div>${cards}${emg}`;
+}
+
+/* --- 장소 --- */
+function renderPlaces(){
+  const html = TRIP.placeGroups.map(g => `
+    <div class="sec-head">${esc(g.name)}</div>
+    ${g.items.map(p => `
+      <div class="card">
+        <h3>${esc(p.ko)}</h3>
+        <p class="card-vi">${esc(p.vi)}</p>
+        <div class="addr">${esc(p.addr)}</div>
+        <div class="acts">
+          <a class="btn btn-solid" href="${esc(mapUrl(p.vi + ", " + p.addr))}" target="_blank" rel="noopener">${pinSvg()}지도</a>
+          <button class="btn" data-sheet="1" data-name="${esc(p.vi)}" data-addr="${esc(p.addr)}">기사님께 보여주기</button>
+          <button class="btn" data-copy="${esc(p.vi + ", " + p.addr)}" data-label="주소">${copySvg()}복사</button>
+        </div>
+        ${p.tip ? `<p class="tipline">${esc(p.tip)}</p>` : ""}
+      </div>`).join("")}`).join("");
+
+  $("#tab-place").innerHTML = html + `
+    <p class="tipline" style="padding:6px 4px 0">주소를 크게 띄워 택시 기사에게 보여주세요. 화면 밝기를 올리면 잘 보입니다.</p>`;
+}
+
+/* --- 준비물 --- */
+function renderPrep(){
+  const all = TRIP.checklist.flatMap(g => g.items);
+  const done = all.filter(t => checked.has(t)).length;
+  const pct = all.length ? Math.round(done / all.length * 100) : 0;
+
+  const groups = TRIP.checklist.map(g => `
+    <div class="sec-head">${esc(g.name)}</div>
+    <div class="card" style="padding:4px 14px">
+      ${g.items.map(t => `
+        <button class="chk" data-check="${esc(t)}" aria-pressed="${checked.has(t)}">
+          <span class="chk-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+          <span class="chk-txt">${esc(t)}</span>
+        </button>`).join("")}
+    </div>`).join("");
+
+  const facts = `
+    <div class="sec-head">알아두면 편한 것</div>
+    <div class="card">
+      <ul class="facts">
+        ${TRIP.facts.map(([k, v]) => `<li><b>${esc(k)}</b> — ${v}</li>`).join("")}
+      </ul>
+    </div>
+    <div class="sec-head">한마디 베트남어</div>
+    <div class="card">
+      <ul class="facts">
+        ${TRIP.phrases.map(([vi, ko]) => `<li class="phrase"><b>${esc(vi)}</b><span>${esc(ko)}</span></li>`).join("")}
+      </ul>
+    </div>`;
+
+  $("#tab-prep").innerHTML = `
+    <div class="prog">
+      <div class="prog-top"><b>짐 싸기</b><span class="num">${done} / ${all.length} 완료</span></div>
+      <div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div>
+    </div>
+    ${groups}${facts}`;
+}
+
+/* --- 탭 --- */
+function setTab(name){
+  state.tab = name;
+  for (const b of document.querySelectorAll(".tab")) b.setAttribute("aria-current", String(b.dataset.tab === name));
+  for (const id of ["plan", "book", "place", "prep"]) $("#tab-" + id).hidden = id !== name;
+  $("#daybar").hidden = name !== "plan";
+  window.scrollTo(0, 0);
+}
+
+/* --- 이벤트 --- */
+document.addEventListener("click", e => {
+  const tab = e.target.closest(".tab");
+  if (tab) return setTab(tab.dataset.tab);
+
+  const chip = e.target.closest(".daychip");
+  if (chip) {
+    state.day = +chip.dataset.day;
+    renderDaybar();
+    renderTimeline();
+    chip.scrollIntoView({ inline: "center", block: "nearest", behavior: "smooth" });
+    return;
+  }
+
+  const cp = e.target.closest("[data-copy]");
+  if (cp) return copyText(cp.dataset.copy, cp.dataset.label || "");
+
+  const sh = e.target.closest("[data-sheet]");
+  if (sh) {
+    $("#sheetName").textContent = sh.dataset.name;
+    $("#sheetAddr").textContent = sh.dataset.addr;
+    $("#sheet").hidden = false;
+    $("#sheetClose").focus();
+    return;
+  }
+  if (e.target.closest("#sheetClose") || e.target.id === "sheet") {
+    $("#sheet").hidden = true;
+    return;
+  }
+
+  const ck = e.target.closest("[data-check]");
+  if (ck) {
+    const key = ck.dataset.check;
+    checked.has(key) ? checked.delete(key) : checked.add(key);
+    saveChecked();
+    const y = window.scrollY;
+    renderPrep();
+    window.scrollTo(0, y);
+  }
+});
+
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape" && !$("#sheet").hidden) $("#sheet").hidden = true;
+});
+
+/* --- 시작 --- */
+function boot(){
+  renderHeader();
+  const now = tickClock();
+  const idx = TRIP.days.findIndex(d => d.date === now.date);
+  state.day = idx >= 0 ? idx : 0;
+
+  renderDaybar();
+  renderTimeline();
+  renderBookings();
+  renderPlaces();
+  renderPrep();
+  setTab("plan");
+
+  $("#foot").innerHTML = `${esc(TRIP.title)} · 이 페이지는 인터넷 없이도 열립니다<br>지도 버튼만 인터넷이 필요해요`;
+
+  const chip = document.querySelector('.daychip[aria-current="true"]');
+  if (chip) chip.scrollIntoView({ inline: "center", block: "nearest" });
+
+  setInterval(() => {
+    tickClock();
+    if (state.tab === "plan") renderTimeline();
+  }, 60000);
+}
+boot();
+</script>
+</body>
+</html>
