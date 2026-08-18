@@ -27,7 +27,7 @@
    밝은 야외에서 폰을 보는 상황을 기준으로 잡은 값이다.
    ──────────────────────────────────────────────────────────── */
 :root{
-  /* 안개 낀 숲 바닥. 바나힐 운해가 내려앉은 색을 배경으로 썼다 */
+  /* ── 낮: 안개 낀 숲 바닥. 바나힐 운해가 내려앉은 색 ── */
   --paper:#E5EDE3;
   --card:#FBFCF8;
   --ink:#12241A;
@@ -36,9 +36,14 @@
   --line-soft:#DBE6DA;
   /* 구조: 옻칠 옥빛. 선택된 것, 누를 것 */
   --sea:#1B4B37;
+  --on-sea:#F1F6EC;
   /* 숲 그늘. 헤더와 택시 화면이 쓴다 */
   --canopy:#173A28;
   --canopy-deep:#0F2B1C;
+  --hd-a:#173A28;
+  --hd-b:#0F2B1C;
+  --hd-glow:rgba(232,185,62,.30);
+  --inset:rgba(18,36,26,.05);
   /* 종류별 색: 강물, 잎사귀, 옻칠, 나무껍질 */
   --ceramic:#1A4A5C;
   --jade:#1E5137;
@@ -57,33 +62,93 @@
   --shadow-lift:0 2px 6px rgba(18,36,26,.13), 0 12px 28px rgba(27,75,55,.12);
   --r:16px;
   --tabh:68px;
+
+  /* ── 밤: 같은 손트라, 해가 진 뒤. 아래 매핑이 골라 쓴다 ── */
+  --d-paper:#101C16;
+  --d-card:#1B2C22;
+  --d-ink:#EAF2E7;
+  --d-ink2:#A6BCAB;
+  --d-line:#31463A;
+  --d-line-soft:#26382E;
+  --d-sea:#7FC9A4;
+  --d-on-sea:#0A1F14;
+  --d-canopy:#16281D;
+  --d-canopy-deep:#101F16;
+  --d-hd-a:#1A3226;
+  --d-hd-b:#101F16;
+  --d-hd-glow:rgba(232,185,62,.18);
+  --d-inset:rgba(255,255,255,.06);
+  --d-ceramic:#79BDD0;
+  --d-jade:#8FCB95;
+  --d-roast:#F0A06A;
+  --d-clay:#C6AC8A;
+  --d-lantern:#E8B93E;
+  --d-lantern-hi:#E8B93E;
+  --d-sea-t:#153741;
+  --d-jade-t:#1B3624;
+  --d-lantern-t:#3A2C11;
+  --d-clay-t:#302921;
 }
+
+/* 기기 설정이 어두울 때. 사용자가 밝게를 고르면 적용하지 않는다 */
 @media (prefers-color-scheme: dark){
-  :root{
-    /* 밤의 숲. 같은 손트라, 해가 진 뒤 */
-    --paper:#0C1611;
-    --card:#16241C;
-    --ink:#E9F1E6;
-    --ink2:#9DB3A2;
-    --line:#2A3E33;
-    --line-soft:#1F3128;
-    --sea:#7FC9A4;
-    --canopy:#0F2B1C;
-    --canopy-deep:#0A1F14;
-    --ceramic:#79BDD0;
-    --jade:#8FCB95;
-    --roast:#F0A06A;
-    --clay:#C6AC8A;
-    --lantern:#E8B93E;
-    --lantern-hi:#E8B93E;
-    --sun:#E8B93E;
-    --sea-t:#12303A;
-    --jade-t:#17301F;
-    --lantern-t:#33270E;
-    --clay-t:#2A231A;
+  :root:not([data-theme="light"]){
+    --paper:var(--d-paper);
+    --card:var(--d-card);
+    --ink:var(--d-ink);
+    --ink2:var(--d-ink2);
+    --line:var(--d-line);
+    --line-soft:var(--d-line-soft);
+    --sea:var(--d-sea);
+    --on-sea:var(--d-on-sea);
+    --canopy:var(--d-canopy);
+    --canopy-deep:var(--d-canopy-deep);
+    --hd-a:var(--d-hd-a);
+    --hd-b:var(--d-hd-b);
+    --hd-glow:var(--d-hd-glow);
+    --inset:var(--d-inset);
+    --ceramic:var(--d-ceramic);
+    --jade:var(--d-jade);
+    --roast:var(--d-roast);
+    --clay:var(--d-clay);
+    --lantern:var(--d-lantern);
+    --lantern-hi:var(--d-lantern-hi);
+    --sea-t:var(--d-sea-t);
+    --jade-t:var(--d-jade-t);
+    --lantern-t:var(--d-lantern-t);
+    --clay-t:var(--d-clay-t);
     --shadow:none;
     --shadow-lift:none;
   }
+}
+/* 사용자가 직접 어둡게를 고른 경우 */
+:root[data-theme="dark"]{
+    --paper:var(--d-paper);
+    --card:var(--d-card);
+    --ink:var(--d-ink);
+    --ink2:var(--d-ink2);
+    --line:var(--d-line);
+    --line-soft:var(--d-line-soft);
+    --sea:var(--d-sea);
+    --on-sea:var(--d-on-sea);
+    --canopy:var(--d-canopy);
+    --canopy-deep:var(--d-canopy-deep);
+    --hd-a:var(--d-hd-a);
+    --hd-b:var(--d-hd-b);
+    --hd-glow:var(--d-hd-glow);
+    --inset:var(--d-inset);
+    --ceramic:var(--d-ceramic);
+    --jade:var(--d-jade);
+    --roast:var(--d-roast);
+    --clay:var(--d-clay);
+    --lantern:var(--d-lantern);
+    --lantern-hi:var(--d-lantern-hi);
+    --sea-t:var(--d-sea-t);
+    --jade-t:var(--d-jade-t);
+    --lantern-t:var(--d-lantern-t);
+    --clay-t:var(--d-clay-t);
+    --shadow:none;
+    --shadow-lift:none;
 }
 
 /* ── 기본 ── */
@@ -117,21 +182,34 @@ a{color:inherit}
   /* 숲 그늘 아래. 오른쪽 위 잎 사이로 빛이 새어 든다.
      페이지의 광원은 하나뿐이라 요약 카드도 같은 방향에서 빛을 받는다 */
   background:
-    radial-gradient(120% 90% at 86% -8%, rgba(232,185,62,.30) 0%, rgba(232,185,62,0) 58%),
-    linear-gradient(168deg, var(--canopy) 0%, var(--canopy-deep) 100%);
-}
-@media (prefers-color-scheme: dark){
-  .hd{
-    color:var(--ink);
-    background:
-      radial-gradient(120% 90% at 86% -8%, rgba(232,185,62,.16) 0%, rgba(232,185,62,0) 58%),
-      linear-gradient(168deg, #10281B 0%, #0A1710 100%);
-  }
+    radial-gradient(120% 90% at 86% -8%, var(--hd-glow) 0%, rgba(232,185,62,0) 58%),
+    linear-gradient(168deg, var(--hd-a) 0%, var(--hd-b) 100%);
 }
 .hd > *{max-width:620px;margin-left:auto;margin-right:auto}
 .hd-row{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
 .hd-title{font-size:23px;font-weight:800;letter-spacing:-.01em;line-height:1.25}
 .hd-sub{font-size:14px;color:#C3D6C4;margin-top:4px}
+.hd-top{display:flex;align-items:center;gap:10px}
+.themebtn{
+  flex:none;width:44px;height:44px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:12px;color:#F1F6EC;
+  background:rgba(241,246,236,.12);
+  border:1px solid rgba(241,246,236,.22);
+}
+.themebtn:active{background:rgba(241,246,236,.22)}
+.themebtn svg{width:21px;height:21px}
+.themebtn .i-moon{display:none}
+:root[data-theme="dark"] .themebtn .i-moon,
+:root:not([data-theme="light"]) .themebtn .i-moon{display:block}
+:root[data-theme="dark"] .themebtn .i-sun,
+:root:not([data-theme="light"]) .themebtn .i-sun{display:none}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]) .themebtn .i-sun{display:block}
+  :root:not([data-theme="dark"]) .themebtn .i-moon{display:none}
+}
+:root[data-theme="light"] .themebtn .i-sun{display:block}
+:root[data-theme="light"] .themebtn .i-moon{display:none}
 .clock{text-align:right;flex:none;line-height:1.2}
 .clock-city{display:block;font-size:12px;letter-spacing:.16em;color:var(--sun);opacity:.85;text-transform:uppercase}
 .clock-main{font-size:30px;font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
@@ -165,14 +243,10 @@ a{color:inherit}
 .daychip b{display:block;font-size:16px;font-weight:750;letter-spacing:-.01em}
 .daychip span{display:block;font-size:13px;color:var(--ink2);font-variant-numeric:tabular-nums}
 .daychip[aria-current="true"]{
-  background:var(--sea);border-color:var(--sea);color:#F1F6EC;
+  background:var(--sea);border-color:var(--sea);color:var(--on-sea);
   box-shadow:var(--shadow);
 }
-.daychip[aria-current="true"] span{color:rgba(241,246,236,.84)}
-@media (prefers-color-scheme: dark){
-  .daychip[aria-current="true"]{color:#0A1F14}
-  .daychip[aria-current="true"] span{color:rgba(10,31,20,.78)}
-}
+.daychip[aria-current="true"] span{color:var(--on-sea);opacity:.82}
 .daychip.is-today::after{
   content:"오늘";display:block;
   font-size:12px;font-weight:800;letter-spacing:.06em;
@@ -369,8 +443,7 @@ main{padding:0 16px}
   text-decoration:none;
 }
 .btn:active{background:var(--clay-t);transform:scale(.98)}
-.btn-solid{background:var(--sea);border-color:var(--sea);color:#F1F6EC}
-@media (prefers-color-scheme: dark){ .btn-solid{color:#0A1F14} }
+.btn-solid{background:var(--sea);border-color:var(--sea);color:var(--on-sea)}
 .btn svg{width:18px;height:18px;flex:none}
 
 /* ── 카드 공통 ── */
@@ -409,10 +482,9 @@ main{padding:0 16px}
 
 .addr{
   margin-top:12px;padding:12px 14px;
-  background:var(--paper);border-radius:11px;
+  background:var(--inset);border-radius:11px;
   font-size:15.5px;line-height:1.5;
 }
-@media (prefers-color-scheme: dark){ .addr{background:rgba(255,255,255,.05)} }
 .tipline{margin-top:11px;font-size:15.5px;color:var(--ink2);line-height:1.55}
 
 /* ── 준비물 ── */
@@ -441,8 +513,7 @@ main{padding:0 16px}
 .chk-box svg{width:18px;height:18px;opacity:0;color:#fff}
 .chk-txt{flex:1;font-size:18px;line-height:1.5}
 .chk[aria-pressed="true"] .chk-box{background:var(--sea);border-color:var(--sea)}
-.chk[aria-pressed="true"] .chk-box svg{opacity:1}
-@media (prefers-color-scheme: dark){ .chk[aria-pressed="true"] .chk-box svg{color:#0A1F14} }
+.chk[aria-pressed="true"] .chk-box svg{opacity:1;color:var(--on-sea)}
 .chk[aria-pressed="true"] .chk-txt{color:var(--ink2);text-decoration:line-through;text-decoration-thickness:2px}
 
 .facts{list-style:none;padding:0}
@@ -529,10 +600,16 @@ footer{padding:28px 4px 22px;font-size:13.5px;color:var(--ink2);text-align:cente
       <h1 class="hd-title" id="hdTitle">다낭 가족여행</h1>
       <p class="hd-sub" id="hdSub"></p>
     </div>
+    <div class="hd-top">
+    <button class="themebtn" id="themebtn" type="button" aria-label="밝게 어둡게 바꾸기">
+      <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.6v2.2M12 19.2v2.2M4.5 4.5l1.6 1.6M17.9 17.9l1.6 1.6M2.6 12h2.2M19.2 12h2.2M4.5 19.5l1.6-1.6M17.9 6.1l1.6-1.6"/></svg>
+      <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.2A8.2 8.2 0 0 1 9.8 4a8.4 8.4 0 1 0 10.2 10.2z"/></svg>
+    </button>
     <div class="clock">
       <span class="clock-city">Đà Nẵng</span>
       <div class="clock-main num" id="clockDad">--:--</div>
       <span class="clock-kr">한국 <b class="num" id="clockKst">--:--</b></span>
+    </div>
     </div>
   </div>
 </header>
@@ -845,6 +922,28 @@ function saveChecked(){
   try { localStorage.setItem(CHECK_KEY, JSON.stringify([...checked])); } catch (e) {}
 }
 
+/* --- 밝게 / 어둡게 ---
+   아무것도 고르지 않으면 기기 설정을 따른다. 한 번 고르면 그 선택이 남는다. */
+const THEME_KEY = "danang.theme.v1";
+
+function currentTheme(){
+  const saved = document.documentElement.getAttribute("data-theme");
+  if (saved) return saved;
+  return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+function applyTheme(mode){
+  document.documentElement.setAttribute("data-theme", mode);
+  try { localStorage.setItem(THEME_KEY, mode); } catch (e) {}
+  /* 안드로이드 크롬 주소창 색도 같이 맞춘다 */
+  for (const m of document.querySelectorAll('meta[name="theme-color"]')) m.remove();
+  const meta = document.createElement("meta");
+  meta.name = "theme-color";
+  meta.content = mode === "dark" ? "#101F16" : "#173A28";
+  document.head.appendChild(meta);
+  const btn = $("#themebtn");
+  if (btn) btn.setAttribute("aria-label", mode === "dark" ? "밝게 바꾸기" : "어둡게 바꾸기");
+}
+
 /* --- 토스트 --- */
 let toastTimer;
 function toast(msg){
@@ -1149,6 +1248,13 @@ function setTab(name){
 
 /* --- 이벤트 --- */
 document.addEventListener("click", e => {
+  if (e.target.closest("#themebtn")) {
+    const next = currentTheme() === "dark" ? "light" : "dark";
+    applyTheme(next);
+    toast(next === "dark" ? "어둡게" : "밝게");
+    return;
+  }
+
   const tab = e.target.closest(".tab");
   if (tab) return setTab(tab.dataset.tab);
 
@@ -1194,6 +1300,11 @@ document.addEventListener("keydown", e => {
 
 /* --- 시작 --- */
 function boot(){
+  try {
+    const saved = localStorage.getItem(THEME_KEY);
+    if (saved === "dark" || saved === "light") applyTheme(saved);
+  } catch (e) {}
+
   renderHeader();
   const now = tickClock();
   const idx = TRIP.days.findIndex(d => d.date === now.date);
