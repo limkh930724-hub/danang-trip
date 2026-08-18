@@ -3,8 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#173A28" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0F2B1C" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#173A28">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="다낭 여행">
@@ -90,38 +89,7 @@
   --d-clay-t:#302921;
 }
 
-/* 기기 설정이 어두울 때. 사용자가 밝게를 고르면 적용하지 않는다 */
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --paper:var(--d-paper);
-    --card:var(--d-card);
-    --ink:var(--d-ink);
-    --ink2:var(--d-ink2);
-    --line:var(--d-line);
-    --line-soft:var(--d-line-soft);
-    --sea:var(--d-sea);
-    --on-sea:var(--d-on-sea);
-    --canopy:var(--d-canopy);
-    --canopy-deep:var(--d-canopy-deep);
-    --hd-a:var(--d-hd-a);
-    --hd-b:var(--d-hd-b);
-    --hd-glow:var(--d-hd-glow);
-    --inset:var(--d-inset);
-    --ceramic:var(--d-ceramic);
-    --jade:var(--d-jade);
-    --roast:var(--d-roast);
-    --clay:var(--d-clay);
-    --lantern:var(--d-lantern);
-    --lantern-hi:var(--d-lantern-hi);
-    --sea-t:var(--d-sea-t);
-    --jade-t:var(--d-jade-t);
-    --lantern-t:var(--d-lantern-t);
-    --clay-t:var(--d-clay-t);
-    --shadow:none;
-    --shadow-lift:none;
-  }
-}
-/* 사용자가 직접 어둡게를 고른 경우 */
+/* 어둡게는 직접 고른 경우에만. 기본은 밝은 쪽이다 */
 :root[data-theme="dark"]{
     --paper:var(--d-paper);
     --card:var(--d-card);
@@ -200,16 +168,9 @@ a{color:inherit}
 .themebtn:active{background:rgba(241,246,236,.22)}
 .themebtn svg{width:21px;height:21px}
 .themebtn .i-moon{display:none}
-:root[data-theme="dark"] .themebtn .i-moon,
-:root:not([data-theme="light"]) .themebtn .i-moon{display:block}
-:root[data-theme="dark"] .themebtn .i-sun,
-:root:not([data-theme="light"]) .themebtn .i-sun{display:none}
-@media (prefers-color-scheme: light){
-  :root:not([data-theme="dark"]) .themebtn .i-sun{display:block}
-  :root:not([data-theme="dark"]) .themebtn .i-moon{display:none}
-}
-:root[data-theme="light"] .themebtn .i-sun{display:block}
-:root[data-theme="light"] .themebtn .i-moon{display:none}
+.themebtn .i-sun{display:block}
+:root[data-theme="dark"] .themebtn .i-moon{display:block}
+:root[data-theme="dark"] .themebtn .i-sun{display:none}
 .clock{text-align:right;flex:none;line-height:1.2}
 .clock-city{display:block;font-size:12px;letter-spacing:.16em;color:var(--sun);opacity:.85;text-transform:uppercase}
 .clock-main{font-size:30px;font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
@@ -923,13 +884,14 @@ function saveChecked(){
 }
 
 /* --- 밝게 / 어둡게 ---
-   아무것도 고르지 않으면 기기 설정을 따른다. 한 번 고르면 그 선택이 남는다. */
+   기본은 밝은 쪽이다. 기기가 다크 모드여도 밝게 시작한다.
+   헤더 버튼으로 바꾸면 그 선택이 폰에 남는다. */
 const THEME_KEY = "danang.theme.v1";
 
 function currentTheme(){
-  const saved = document.documentElement.getAttribute("data-theme");
-  if (saved) return saved;
-  return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  /* 기기가 어두운 설정이어도 밝은 쪽으로 시작한다.
+     어둡게는 사용자가 직접 고른 경우에만 남는다. */
+  return document.documentElement.getAttribute("data-theme") || "light";
 }
 function applyTheme(mode){
   document.documentElement.setAttribute("data-theme", mode);
