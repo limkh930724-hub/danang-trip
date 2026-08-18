@@ -29,18 +29,18 @@
    ──────────────────────────────────────────────────────────── */
 :root{
   /* ── 낮: 안개 낀 숲 바닥. 바나힐 운해가 내려앉은 색 ── */
-  --paper:#F5F9F3;
+  --paper:#FBFBFA;
   --card:#FFFFFF;
   --ink:#12241A;
   --ink2:#384F42;
-  --line:#C4D4C4;
-  --line-soft:#DBE6DA;
+  --line:#D6D9D4;
+  --line-soft:#E7E9E5;
   /* 구조: 옻칠 옥빛. 선택된 것, 누를 것 */
   --sea:#1B4B37;
   --on-sea:#F1F6EC;
   /* 숲 그늘. 헤더와 택시 화면이 쓴다 */
   --canopy-deep:#0F2B1C;
-  --inset:rgba(18,36,26,.05);
+  --inset:rgba(20,24,22,.045);
   /* 종류별 색: 강물, 잎사귀, 옻칠, 나무껍질 */
   --ceramic:#1A4A5C;
   --jade:#1E5137;
@@ -55,8 +55,8 @@
   --lantern-t:#FBF2DA;
   --clay-t:#F0EAE0;
   /* 그림자는 초록을 머금은 회색. 숲 그늘의 색이다 */
-  --shadow:0 0 0 1px rgba(18,36,26,.055), 0 1px 2px rgba(18,36,26,.04), 0 8px 20px rgba(18,36,26,.07);
-  --shadow-lift:0 0 0 1px rgba(18,36,26,.06), 0 2px 6px rgba(18,36,26,.10), 0 14px 30px rgba(27,75,55,.13);
+  --shadow:0 0 0 1px rgba(22,26,24,.07), 0 1px 2px rgba(22,26,24,.045), 0 8px 20px rgba(22,26,24,.06);
+  --shadow-lift:0 0 0 1px rgba(22,26,24,.07), 0 2px 6px rgba(22,26,24,.10), 0 14px 30px rgba(22,26,24,.11);
   /* 낮에는 카드에 테두리를 두지 않는다. 그림자와 면으로만 띄운다 */
   --card-edge:transparent;
   --tonal:#DCE9DF;
@@ -433,13 +433,27 @@ main{padding:0 16px}
   border:1px solid var(--line);
   background:var(--line-soft);
 }
+/* 사진 출처. CC 라이선스는 저작자 표기를 요구하므로 지울 수는 없다.
+   대신 접어두어 평소에는 한 줄만 보이게 한다. */
 .credits{
-  margin-top:16px;padding-top:13px;
+  margin-top:18px;padding-top:14px;
   border-top:1px solid var(--line-soft);
-  font-size:12px;line-height:1.65;color:var(--ink2);
   text-align:left;
 }
-.credits b{display:block;font-weight:800;margin-bottom:3px}
+.credits summary{
+  list-style:none;cursor:pointer;
+  font-size:12px;font-weight:700;
+  color:var(--ink2);opacity:.75;
+  padding:4px 0;
+}
+.credits summary::-webkit-details-marker{display:none}
+.credits summary::after{content:" +";font-weight:800}
+.credits[open] summary::after{content:" −"}
+.credits-body{
+  font-size:11.5px;line-height:1.7;
+  color:var(--ink2);opacity:.85;
+  padding-top:6px;
+}
 .shot figcaption{
   padding:7px 12px 8px;
   font-size:12px;line-height:1.45;
@@ -1386,7 +1400,7 @@ function boot(){
   setTab("plan");
 
   $("#foot").innerHTML = `${esc(TRIP.title)} · 이 페이지는 인터넷 없이도 열립니다<br>지도 버튼만 인터넷이 필요해요
-    <div class="credits"><b>사진 출처 (위키미디어 커먼즈)</b>${creditList()}</div>`;
+    <details class="credits"><summary>사진 출처</summary><div class="credits-body">위키미디어 커먼즈<br>${creditList()}</div></details>`;
 
   const chip = document.querySelector('.daychip[aria-current="true"]');
   if (chip) chip.scrollIntoView({ inline: "center", block: "nearest" });
