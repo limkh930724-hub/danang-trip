@@ -291,6 +291,88 @@ main{padding:0 16px}
 }
 .brief-next-v{display:block;font-size:18.5px;font-weight:700;letter-spacing:-.01em;margin-top:2px}
 
+/* ── 환율. 메인에는 한 줄짜리 버튼만 두고 실제 계산은 팝업에서 한다 ── */
+.fxbtn{
+  display:flex;align-items:center;gap:11px;
+  width:100%;min-height:52px;
+  margin:13px 0 2px;padding:0 15px;
+  border-radius:var(--r-s);border:none;
+  background:var(--tonal);color:var(--sea);
+  text-align:left;
+}
+.fxbtn:active{filter:brightness(.94)}
+.fxbtn-ico{
+  flex:none;width:30px;height:30px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--sea);color:var(--on-sea);
+  font-size:16px;font-weight:800;
+}
+.fxbtn-label{flex:1;font-size:16px;font-weight:750}
+.fxbtn-hint{flex:none;font-size:13.5px;font-weight:650;opacity:.8;font-variant-numeric:tabular-nums}
+
+/* 아래에서 올라오는 팝업. 엄지가 닿는 자리에 버튼이 모인다 */
+.modal{
+  position:fixed;inset:0;z-index:80;
+  display:flex;align-items:flex-end;justify-content:center;
+}
+.modal[hidden]{display:none}
+.modal-back{position:absolute;inset:0;background:rgba(12,20,15,.55)}
+.modal-card{
+  position:relative;width:100%;max-width:520px;
+  background:var(--card);
+  border-radius:24px 24px 0 0;
+  padding:10px 20px calc(20px + env(safe-area-inset-bottom));
+  box-shadow:0 -10px 44px rgba(0,0,0,.28);
+  animation:sheetUp .22s ease-out;
+}
+@keyframes sheetUp{from{transform:translateY(18px);opacity:0}to{transform:none;opacity:1}}
+.modal-grip{
+  width:40px;height:4px;border-radius:99px;
+  background:var(--line);margin:0 auto 14px;
+}
+.modal-title{font-size:19px;font-weight:750;letter-spacing:-.02em;margin-bottom:14px}
+
+.fx-in{
+  display:flex;align-items:center;gap:9px;
+  background:var(--inset);border-radius:14px;
+  padding:0 15px;min-height:56px;
+}
+.fx-in:focus-within{box-shadow:0 0 0 2px var(--sea)}
+.fx-unit{flex:none;font-size:20px;font-weight:700;color:var(--ink2)}
+#fxInput{
+  flex:1;min-width:0;width:100%;
+  border:none;background:none;outline:none;padding:0;
+  font-family:inherit;font-size:24px;font-weight:750;
+  letter-spacing:-.02em;font-variant-numeric:tabular-nums;
+  color:var(--ink);
+}
+.fx-eq{
+  display:flex;align-items:baseline;justify-content:center;gap:6px;
+  padding:18px 0 16px;color:var(--sea);
+}
+.fx-eq b{
+  font-size:40px;font-weight:800;letter-spacing:-.04em;
+  font-variant-numeric:tabular-nums;line-height:1;
+}
+.fx-eq span{font-size:19px;font-weight:750}
+.fx-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.fx-chip{
+  min-height:54px;border-radius:13px;border:none;
+  background:var(--tonal);color:var(--sea);
+  font-size:16.5px;font-weight:750;
+  font-variant-numeric:tabular-nums;
+}
+.fx-chip[aria-current="true"]{background:var(--sea);color:var(--on-sea)}
+.fx-chip:active{filter:brightness(.94)}
+.fx-note{margin-top:13px;font-size:13px;line-height:1.55;color:var(--ink2)}
+.fx-done{
+  width:100%;min-height:54px;margin-top:16px;
+  border-radius:14px;border:none;
+  background:var(--sea);color:var(--on-sea);
+  font-size:17px;font-weight:750;
+}
+.fx-done:active{filter:brightness(1.08)}
+
 /* ── 날짜 제목 ── */
 .day-head{padding:22px 2px 14px}
 .day-head h2{font-size:27px;font-weight:800;letter-spacing:-.02em;line-height:1.25}
@@ -647,6 +729,7 @@ footer{padding:28px 4px 22px;font-size:13.5px;color:var(--ink2);text-align:cente
 <main>
   <section id="tab-plan">
     <div id="brief"></div>
+    <div id="fxbar"></div>
     <div class="day-head">
       <h2 id="dayTitle"></h2>
       <p id="dayMeta"></p>
@@ -688,6 +771,16 @@ footer{padding:28px 4px 22px;font-size:13.5px;color:var(--ink2);text-align:cente
     <p class="sheet-hint">Cho tôi đến đây, cảm ơn.<br>(여기로 가주세요, 감사합니다)</p>
   </div>
   <button class="sheet-close" id="sheetClose">닫기</button>
+</div>
+
+<div class="modal" id="fxModal" hidden>
+  <div class="modal-back"></div>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="fxTitle">
+    <p class="modal-grip"></p>
+    <h2 class="modal-title" id="fxTitle">환율 계산기</h2>
+    <div id="fxBody"></div>
+    <button class="fx-done" id="fxClose" type="button">닫기</button>
+  </div>
 </div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -1064,6 +1157,64 @@ function renderDaybar(){
     </button>`).join("");
 }
 
+/* --- 환율 어림셈 ---
+   실시간 환율을 부르지 않는다. 오프라인에서도 열려야 하고,
+   현지에서 필요한 것은 소수점이 아니라 "대충 얼마인지"이기 때문이다.
+   1,000동을 55원으로 잡는다. 0 세 개 빼고 55 곱하는 그 셈이다. */
+const FX_PER_1000 = 55;
+const FX_PRESETS = [10000, 50000, 100000, 200000, 500000, 1000000];
+let fxVnd = 100000;
+
+const fxFmt = n => n.toLocaleString("ko-KR");
+const fxWon = vnd => Math.round(vnd / 1000 * FX_PER_1000);
+const fxLabel = v => (v >= 10000 ? v / 10000 + "만" : fxFmt(v));
+
+/* 메인의 한 줄 버튼 */
+function renderFxBar(){
+  $("#fxbar").innerHTML = `
+    <button class="fxbtn" id="fxOpen" type="button">
+      <span class="fxbtn-ico">₫</span>
+      <span class="fxbtn-label">환율 계산기</span>
+      <span class="fxbtn-hint">10만동 ≈ 5,500원</span>
+    </button>`;
+}
+
+/* 팝업 속 계산기 */
+function renderFxBody(){
+  $("#fxBody").innerHTML = `
+    <div class="fx-in">
+      <span class="fx-unit">₫</span>
+      <input id="fxInput" type="text" inputmode="numeric" autocomplete="off"
+             value="${fxFmt(fxVnd)}" aria-label="베트남 동 금액">
+    </div>
+    <p class="fx-eq"><b id="fxOut">${fxFmt(fxWon(fxVnd))}</b><span>원</span></p>
+    <div class="fx-grid">
+      ${FX_PRESETS.map(v => `<button class="fx-chip" type="button" data-fx="${v}" aria-current="${v === fxVnd}">${fxLabel(v)}</button>`).join("")}
+    </div>
+    <p class="fx-note">1,000동을 55원으로 잡은 어림셈입니다. 0을 세 개 지우고 55를 곱하면 됩니다.</p>`;
+}
+
+/* 입력 중에는 결과 숫자만 바꾼다. 통째로 다시 그리면 커서가 튄다 */
+function fxSet(vnd, syncInput){
+  fxVnd = Math.max(0, Math.min(vnd, 999999999));
+  const out = $("#fxOut");
+  if (out) out.textContent = fxFmt(fxWon(fxVnd));
+  if (syncInput) {
+    const el = $("#fxInput");
+    if (el) el.value = fxFmt(fxVnd);
+  }
+  for (const b of document.querySelectorAll("[data-fx]")) {
+    b.setAttribute("aria-current", String(+b.dataset.fx === fxVnd));
+  }
+}
+
+function fxOpen(){
+  renderFxBody();
+  $("#fxModal").hidden = false;
+  const c = $("#fxClose");
+  if (c) c.focus();
+}
+
 /* 남은 시간을 사람이 읽는 말로 */
 function untilText(mins){
   if (mins <= 0) return "곧";
@@ -1340,6 +1491,15 @@ document.addEventListener("click", e => {
     return;
   }
 
+  if (e.target.closest("#fxOpen")) { fxOpen(); return; }
+  if (e.target.closest("#fxClose") || e.target.classList.contains("modal-back")) {
+    $("#fxModal").hidden = true;
+    return;
+  }
+
+  const fx = e.target.closest("[data-fx]");
+  if (fx) { fxSet(+fx.dataset.fx, true); return; }
+
   const seg = e.target.closest("[data-seg]");
   if (seg) {
     state.placeTab = +seg.dataset.seg;
@@ -1375,8 +1535,21 @@ document.addEventListener("click", e => {
   }
 });
 
+document.addEventListener("input", e => {
+  if (e.target && e.target.id === "fxInput") {
+    fxSet(+String(e.target.value).replace(/[^0-9]/g, "") || 0, false);
+  }
+});
+
+/* 입력을 마치면 자릿수 쉼표를 다시 넣어준다 */
+document.addEventListener("blur", e => {
+  if (e.target && e.target.id === "fxInput") fxSet(fxVnd, true);
+}, true);
+
 document.addEventListener("keydown", e => {
-  if (e.key === "Escape" && !$("#sheet").hidden) $("#sheet").hidden = true;
+  if (e.key !== "Escape") return;
+  if (!$("#fxModal").hidden) { $("#fxModal").hidden = true; return; }
+  if (!$("#sheet").hidden) $("#sheet").hidden = true;
 });
 
 /* --- 시작 --- */
@@ -1392,6 +1565,7 @@ function boot(){
   state.day = idx >= 0 ? idx : 0;
 
   renderBrief();
+  renderFxBar();
   renderDaybar();
   renderTimeline();
   renderBookings();
