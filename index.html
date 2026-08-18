@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#F7E9CC" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#1B1410" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#173A28" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F2B1C" media="(prefers-color-scheme: dark)">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="다낭 여행">
@@ -27,55 +27,60 @@
    밝은 야외에서 폰을 보는 상황을 기준으로 잡은 값이다.
    ──────────────────────────────────────────────────────────── */
 :root{
-  /* 방: 오트빛 벽, 우유거품 같은 카드, 에스프레소 글자 */
-  --paper:#F2EBDF;
-  --card:#FFFCF6;
-  --ink:#221A15;
-  --ink2:#59483C;
-  --line:#DFD2BE;
-  --line-soft:#EBE1D2;
-  /* 구조: 딥 커피. 선택된 것, 누를 것 */
-  --sea:#4A3226;
-  /* 종류별 색 */
-  --jade:#3A5730;
-  --clay:#5C4030;
-  /* 햇살: 지금 이 순간에만 쓴다 */
-  --lantern:#7A4A05;
-  --lantern-hi:#E0A62C;
-  --sun:#F6C75B;
-  --sea-t:#E7F1F2;
-  --jade-t:#EBF2E6;
-  --lantern-t:#FDF2D8;
-  --clay-t:#F2EAE1;
-  --ceramic:#1C5661;
-  --roast:#7A3C0F;
-  /* 그림자도 따뜻하게. 회색 그림자는 햇살 아래서 탁해 보인다 */
-  --shadow:0 1px 2px rgba(74,50,38,.08), 0 3px 10px rgba(74,50,38,.06);
-  --shadow-lift:0 2px 6px rgba(74,50,38,.12), 0 12px 28px rgba(122,74,5,.10);
+  /* 안개 낀 숲 바닥. 바나힐 운해가 내려앉은 색을 배경으로 썼다 */
+  --paper:#E5EDE3;
+  --card:#FBFCF8;
+  --ink:#12241A;
+  --ink2:#384F42;
+  --line:#C4D4C4;
+  --line-soft:#DBE6DA;
+  /* 구조: 옻칠 옥빛. 선택된 것, 누를 것 */
+  --sea:#1B4B37;
+  /* 숲 그늘. 헤더와 택시 화면이 쓴다 */
+  --canopy:#173A28;
+  --canopy-deep:#0F2B1C;
+  /* 종류별 색: 강물, 잎사귀, 옻칠, 나무껍질 */
+  --ceramic:#1A4A5C;
+  --jade:#1E5137;
+  --roast:#7F3310;
+  --clay:#5A4632;
+  /* 황동빛. 잎 사이로 든 빛이자 옻칠의 금박. 지금 이 순간에만 쓴다 */
+  --lantern:#6B4A05;
+  --lantern-hi:#C99A26;
+  --sun:#E8B93E;
+  --sea-t:#E2EEF1;
+  --jade-t:#E3EFE4;
+  --lantern-t:#FBF2DA;
+  --clay-t:#F0EAE0;
+  /* 그림자는 초록을 머금은 회색. 숲 그늘의 색이다 */
+  --shadow:0 1px 2px rgba(18,36,26,.09), 0 3px 10px rgba(18,36,26,.06);
+  --shadow-lift:0 2px 6px rgba(18,36,26,.13), 0 12px 28px rgba(27,75,55,.12);
   --r:16px;
   --tabh:68px;
 }
 @media (prefers-color-scheme: dark){
   :root{
-    /* 저녁의 램프. 같은 카페, 해가 진 뒤 */
-    --paper:#17110D;
-    --card:#241C16;
-    --ink:#F4EBDD;
-    --ink2:#B8A694;
-    --line:#3A2E23;
-    --line-soft:#2C231A;
-    --sea:#D9BF9C;
-    --jade:#9BC98A;
-    --clay:#C9A98C;
-    --lantern:#F6C75B;
-    --lantern-hi:#F6C75B;
-    --sun:#F6C75B;
-    --sea-t:#1E3438;
-    --jade-t:#1D2A18;
-    --lantern-t:#3A2A12;
-    --clay-t:#2E241B;
-    --ceramic:#7FC4CE;
-    --roast:#F0A264;
+    /* 밤의 숲. 같은 손트라, 해가 진 뒤 */
+    --paper:#0C1611;
+    --card:#16241C;
+    --ink:#E9F1E6;
+    --ink2:#9DB3A2;
+    --line:#2A3E33;
+    --line-soft:#1F3128;
+    --sea:#7FC9A4;
+    --canopy:#0F2B1C;
+    --canopy-deep:#0A1F14;
+    --ceramic:#79BDD0;
+    --jade:#8FCB95;
+    --roast:#F0A06A;
+    --clay:#C6AC8A;
+    --lantern:#E8B93E;
+    --lantern-hi:#E8B93E;
+    --sun:#E8B93E;
+    --sea-t:#12303A;
+    --jade-t:#17301F;
+    --lantern-t:#33270E;
+    --clay-t:#2A231A;
     --shadow:none;
     --shadow-lift:none;
   }
@@ -107,30 +112,30 @@ a{color:inherit}
 /* ── 헤더 ── */
 .hd{
   position:relative;
-  color:var(--ink);
+  color:#F1F6EC;
   padding:calc(env(safe-area-inset-top) + 18px) 18px 20px;
-  border-bottom:1px solid #E4D3B4;
-  /* 창가에서 빛이 비스듬히 들어오는 결. 밝은 점은 시계가 있는 쪽 */
+  /* 숲 그늘 아래. 오른쪽 위 잎 사이로 빛이 새어 든다.
+     페이지의 광원은 하나뿐이라 요약 카드도 같은 방향에서 빛을 받는다 */
   background:
-    radial-gradient(125% 95% at 86% -6%, #FFEDC4 0%, rgba(255,237,196,0) 60%),
-    linear-gradient(166deg, #FBF1DE 0%, #F4E2C0 100%);
+    radial-gradient(120% 90% at 86% -8%, rgba(232,185,62,.30) 0%, rgba(232,185,62,0) 58%),
+    linear-gradient(168deg, var(--canopy) 0%, var(--canopy-deep) 100%);
 }
 @media (prefers-color-scheme: dark){
   .hd{
-    border-bottom-color:#33271B;
+    color:var(--ink);
     background:
-      radial-gradient(125% 95% at 86% -6%, #3E2C13 0%, rgba(62,44,19,0) 60%),
-      linear-gradient(166deg, #221A12 0%, #17110D 100%);
+      radial-gradient(120% 90% at 86% -8%, rgba(232,185,62,.16) 0%, rgba(232,185,62,0) 58%),
+      linear-gradient(168deg, #10281B 0%, #0A1710 100%);
   }
 }
 .hd > *{max-width:620px;margin-left:auto;margin-right:auto}
 .hd-row{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
 .hd-title{font-size:23px;font-weight:800;letter-spacing:-.01em;line-height:1.25}
-.hd-sub{font-size:14px;color:var(--ink2);margin-top:4px}
+.hd-sub{font-size:14px;color:#C3D6C4;margin-top:4px}
 .clock{text-align:right;flex:none;line-height:1.2}
-.clock-city{display:block;font-size:12px;letter-spacing:.16em;opacity:.7;text-transform:uppercase}
+.clock-city{display:block;font-size:12px;letter-spacing:.16em;color:var(--sun);opacity:.85;text-transform:uppercase}
 .clock-main{font-size:30px;font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
-.clock-kr{display:block;font-size:12.5px;color:var(--ink2);margin-top:2px}
+.clock-kr{display:block;font-size:12.5px;color:#C3D6C4;margin-top:2px}
 
 /* ── 날짜 바 ── */
 .daybar{
@@ -160,13 +165,13 @@ a{color:inherit}
 .daychip b{display:block;font-size:16px;font-weight:750;letter-spacing:-.01em}
 .daychip span{display:block;font-size:13px;color:var(--ink2);font-variant-numeric:tabular-nums}
 .daychip[aria-current="true"]{
-  background:var(--sea);border-color:var(--sea);color:#FDF7EC;
+  background:var(--sea);border-color:var(--sea);color:#F1F6EC;
   box-shadow:var(--shadow);
 }
-.daychip[aria-current="true"] span{color:rgba(253,247,236,.82)}
+.daychip[aria-current="true"] span{color:rgba(241,246,236,.84)}
 @media (prefers-color-scheme: dark){
-  .daychip[aria-current="true"]{color:#1B140E}
-  .daychip[aria-current="true"] span{color:rgba(27,20,14,.78)}
+  .daychip[aria-current="true"]{color:#0A1F14}
+  .daychip[aria-current="true"] span{color:rgba(10,31,20,.78)}
 }
 .daychip.is-today::after{
   content:"오늘";display:block;
@@ -184,7 +189,7 @@ main{padding:0 16px}
 .brief{
   margin:16px 0 4px;
   background:
-    radial-gradient(120% 100% at 88% 0%, #FFF6E2 0%, rgba(255,246,226,0) 66%),
+    radial-gradient(120% 100% at 88% 0%, rgba(232,185,62,.18) 0%, rgba(232,185,62,0) 66%),
     var(--card);
   border:2px solid var(--sun);
   border-radius:var(--r);
@@ -286,7 +291,7 @@ main{padding:0 16px}
 .ti[data-kind="관광"] .ti-rail::before{background:var(--jade)}
 .ti[data-kind="관광"] .chip{background:var(--jade-t);color:var(--jade)}
 .ti[data-kind="식사"] .ti-rail::before{background:var(--roast)}
-.ti[data-kind="식사"] .chip{background:#FBEEE1;color:var(--roast)}
+.ti[data-kind="식사"] .chip{background:#FCEDE4;color:var(--roast)}
 .ti[data-kind="휴식"] .ti-rail::before,
 .ti[data-kind="숙소"] .ti-rail::before{background:var(--clay)}
 .ti[data-kind="휴식"] .chip,
@@ -312,14 +317,14 @@ main{padding:0 16px}
 .nowline-tag{
   flex:none;
   font-size:12.5px;font-weight:800;
-  color:#221A15;background:var(--sun);
+  color:#12241A;background:var(--sun);
   padding:4px 12px;border-radius:999px;
   font-variant-numeric:tabular-nums;
-  box-shadow:0 2px 8px rgba(224,166,44,.4);
+  box-shadow:0 2px 8px rgba(201,154,38,.45);
 }
 .nowline-rule{
   flex:1;height:3px;border-radius:2px;
-  background:linear-gradient(90deg, var(--sun), rgba(246,199,91,0));
+  background:linear-gradient(90deg, var(--sun), rgba(232,185,62,0));
 }
 
 /* ── 사진 ── */
@@ -364,8 +369,8 @@ main{padding:0 16px}
   text-decoration:none;
 }
 .btn:active{background:var(--clay-t);transform:scale(.98)}
-.btn-solid{background:var(--sea);border-color:var(--sea);color:#FDF7EC}
-@media (prefers-color-scheme: dark){ .btn-solid{color:#1B140E} }
+.btn-solid{background:var(--sea);border-color:var(--sea);color:#F1F6EC}
+@media (prefers-color-scheme: dark){ .btn-solid{color:#0A1F14} }
 .btn svg{width:18px;height:18px;flex:none}
 
 /* ── 카드 공통 ── */
@@ -437,7 +442,7 @@ main{padding:0 16px}
 .chk-txt{flex:1;font-size:18px;line-height:1.5}
 .chk[aria-pressed="true"] .chk-box{background:var(--sea);border-color:var(--sea)}
 .chk[aria-pressed="true"] .chk-box svg{opacity:1}
-@media (prefers-color-scheme: dark){ .chk[aria-pressed="true"] .chk-box svg{color:#1B140E} }
+@media (prefers-color-scheme: dark){ .chk[aria-pressed="true"] .chk-box svg{color:#0A1F14} }
 .chk[aria-pressed="true"] .chk-txt{color:var(--ink2);text-decoration:line-through;text-decoration-thickness:2px}
 
 .facts{list-style:none;padding:0}
@@ -472,9 +477,9 @@ main{padding:0 16px}
 .sheet{
   position:fixed;inset:0;z-index:60;
   background:
-    radial-gradient(100% 70% at 50% 0%, #3A2A1C 0%, rgba(58,42,28,0) 70%),
-    #251C16;
-  color:#FBF3E4;
+    radial-gradient(100% 70% at 50% 0%, rgba(232,185,62,.16) 0%, rgba(232,185,62,0) 70%),
+    var(--canopy-deep);
+  color:#F1F6EC;
   display:flex;flex-direction:column;justify-content:center;
   padding:28px 24px calc(28px + env(safe-area-inset-bottom));
   text-align:center;
@@ -487,7 +492,7 @@ main{padding:0 16px}
 .sheet-close{
   margin-top:28px;align-self:center;
   min-height:52px;padding:0 30px;border-radius:13px;
-  background:rgba(251,243,228,.16);border:1px solid rgba(251,243,228,.25);
+  background:rgba(241,246,236,.16);border:1px solid rgba(241,246,236,.28);
   font-size:17px;font-weight:750;
 }
 
