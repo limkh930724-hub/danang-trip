@@ -370,6 +370,29 @@ main{padding:0 16px}
 }
 .card .shot{margin:-16px -17px 14px}
 .shot img{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover}
+/* 장소 탭 안의 하위 탭 */
+.seg{
+  display:flex;gap:8px;
+  margin:16px 0 2px;
+  overflow-x:auto;-webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+.seg::-webkit-scrollbar{display:none}
+.segbtn{
+  flex:1 0 auto;min-height:48px;padding:0 18px;
+  border-radius:13px;
+  border:1.5px solid var(--line);
+  background:var(--card);
+  font-size:16px;font-weight:700;
+  white-space:nowrap;
+}
+.segbtn[aria-current="true"]{
+  background:var(--sea);border-color:var(--sea);
+  color:var(--on-sea);box-shadow:var(--shadow);
+}
+.segbtn:active{background:var(--clay-t)}
+.segbtn[aria-current="true"]:active{background:var(--sea)}
+
 /* 관광지 썸네일. 글줄 옆에 붙어 세로 자리를 거의 안 먹는다 */
 .ti-body,.pl-body{display:flex;gap:13px;align-items:flex-start}
 .ti-body > .ti-text,.pl-body > .pl-text{flex:1;min-width:0}
@@ -793,34 +816,47 @@ const TRIP = {
     ["영사콜센터 (24시간)","+82-2-3210-0404"]
   ],
 
+  /* 장소 탭. key 는 하위 탭 버튼에 그대로 쓰인다.
+     head 가 붙은 항목 앞에는 작은 구분 제목이 들어간다. */
   placeGroups: [
-    { name:"우리 숙소", items:[
-      { ko:"무엉탄 그랜드 다낭 (9/5–9/6)", vi:"Khách sạn Mường Thanh Grand Đà Nẵng", addr:"962 Ngô Quyền, Phước Mỹ, Sơn Trà, Đà Nẵng", tip:"미케비치 쪽. 택시 기사에게 이 주소를 보여주세요", photo:"mt" },
-      { ko:"멜리아 빈펄 리버프론트 (9/6–9/8)", vi:"Meliá Vinpearl Đà Nẵng Riverfront", addr:"341 Đ. Trần Hưng Đạo, An Hải Bắc, Sơn Trà, Đà Nẵng", tip:"한강변. 용다리까지 걸어서 6분", photo:"ml" }
-    ]},
-    { name:"가볼 곳", items:[
-      { ko:"미케비치", vi:"Bãi biển Mỹ Khê", addr:"Võ Nguyên Giáp, Phước Mỹ, Sơn Trà, Đà Nẵng", tip:"첫 숙소에서 걸어갈 거리. 해질 무렵이 좋음", thumb:"beach" },
-      { ko:"용다리", vi:"Cầu Rồng", addr:"Nguyễn Văn Linh, Hải Châu, Đà Nẵng", tip:"토·일 21:00 불쇼 약 15분", thumb:"dragon" },
-      { ko:"바나힐", vi:"Bà Nà Hills", addr:"Thôn An Sơn, Hòa Ninh, Hòa Vang, Đà Nẵng", tip:"산 위는 10도 가까이 서늘합니다", thumb:"bana" },
-      { ko:"호이안 올드타운", vi:"Phố cổ Hội An", addr:"Minh An, Hội An, Quảng Nam", tip:"통합 입장권 12만동. 밤 등불이 하이라이트", thumb:"hoian" },
+    { key:"지역", items:[
+      { ko:"미케비치", vi:"Bãi biển Mỹ Khê", addr:"Võ Nguyên Giáp, Phước Mỹ, Sơn Trà, Đà Nẵng", tip:"첫 숙소에서 걸어갈 거리. 해질 무렵이 좋습니다", thumb:"beach" },
+      { ko:"용다리", vi:"Cầu Rồng", addr:"Nguyễn Văn Linh, Hải Châu, Đà Nẵng", tip:"토·일 21:00 불쇼 약 15분. 둘째 숙소에서 도보 6분", thumb:"dragon" },
+      { ko:"바나힐", vi:"Bà Nà Hills", addr:"Thôn An Sơn, Hòa Ninh, Hòa Vang, Đà Nẵng", tip:"차로 50분. 산 위는 10도 가까이 서늘합니다", thumb:"bana" },
+      { ko:"호이안 올드타운", vi:"Phố cổ Hội An", addr:"Minh An, Hội An, Quảng Nam", tip:"차로 45분. 통합 입장권 12만동. 밤 등불이 하이라이트", thumb:"hoian" },
       { ko:"린응사 (해수관음상)", vi:"Chùa Linh Ứng", addr:"Hoàng Sa, Thọ Quang, Sơn Trà, Đà Nẵng", tip:"무료 입장. 어깨·무릎 가리는 옷", thumb:"linhung" },
       { ko:"오행산 (마블마운틴)", vi:"Ngũ Hành Sơn", addr:"81 Huyền Trân Công Chúa, Hòa Hải, Ngũ Hành Sơn, Đà Nẵng", tip:"엘리베이터 별도 요금. 계단은 가파릅니다", thumb:"marble" },
       { ko:"다낭 대성당 (핑크성당)", vi:"Nhà thờ Chính tòa Đà Nẵng", addr:"156 Trần Phú, Hải Châu, Đà Nẵng", tip:"미사 시간엔 내부 관람 제한", thumb:"church" }
     ]},
-    { name:"먹을 곳", items:[
-      { ko:"반쎄오 바즈엉", vi:"Bánh Xèo Bà Dưỡng", addr:"K280/23 Hoàng Diệu, Hải Châu, Đà Nẵng", tip:"골목 깊숙이. 반쎄오 + 넴루이 조합" },
-      { ko:"마담런", vi:"Madame Lân", addr:"4 Bạch Đằng, Thạch Thang, Hải Châu, Đà Nẵng", tip:"메뉴에 사진이 있어 주문하기 쉬움" },
-      { ko:"짠 (반짱꾸온팃헤오)", vi:"Quán Trần", addr:"4 Lê Duẩn, Hải Châu, Đà Nẵng", tip:"돼지고기 라이스페이퍼 쌈" },
-      { ko:"미꽝 1A", vi:"Mì Quảng 1A", addr:"1 Hải Phòng, Hải Châu, Đà Nẵng", tip:"다낭식 비빔국수. 아침에 열립니다" },
-      { ko:"콩카페", vi:"Cộng Cà Phê", addr:"96-98 Bạch Đằng, Hải Châu, Đà Nẵng", tip:"코코넛 커피가 대표 메뉴" }
+
+    { key:"숙소", items:[
+      { ko:"무엉탄 그랜드 다낭", vi:"Khách sạn Mường Thanh Grand Đà Nẵng", addr:"962 Ngô Quyền, Phước Mỹ, Sơn Trà, Đà Nẵng", tip:"9/5 – 9/6 1박. 미케비치 쪽입니다", photo:"mt" },
+      { ko:"멜리아 빈펄 리버프론트", vi:"Meliá Vinpearl Đà Nẵng Riverfront", addr:"341 Đ. Trần Hưng Đạo, An Hải Bắc, Sơn Trà, Đà Nẵng", tip:"9/6 – 9/8 2박. 한강변, 용다리까지 도보 6분", photo:"ml" }
     ]},
-    { name:"그 밖에", items:[
-      { ko:"한시장", vi:"Chợ Hàn", addr:"119 Trần Phú, Hải Châu 1, Hải Châu, Đà Nẵng", tip:"흥정 필수. 오후 6시쯤 닫는 가게가 많음", thumb:"market" },
+
+    { key:"식당", items:[
+      { head:"다낭 시내", ko:"마담런", vi:"Nhà hàng Madame Lân", addr:"4 Bạch Đằng, Thạch Thang, Hải Châu, Đà Nẵng", tip:"한강변 대형 베트남 가정식. 메뉴에 사진이 있어 주문이 쉽습니다. 넴루이와 짜까라봉" },
+      { ko:"반쎄오 바즈엉", vi:"Bánh Xèo Bà Dưỡng", addr:"K280/23 Hoàng Diệu, Hải Châu, Đà Nẵng", tip:"골목 깊숙이 있습니다. 반쎄오와 넴루이를 같이. 1인 2~3장이면 충분" },
+      { ko:"꽌 짠", vi:"Quán Trần", addr:"4 Lê Duẩn, Hải Châu, Đà Nẵng", tip:"반짱꾸온팃헤오. 삼겹살을 라이스페이퍼에 싸 먹습니다. 어른들 입에 잘 맞습니다" },
+      { ko:"미꽝 1A", vi:"Mì Quảng 1A", addr:"1 Hải Phòng, Hải Châu, Đà Nẵng", tip:"다낭식 비빔국수. 아침부터 열어 조식 대신 가기 좋습니다" },
+      { ko:"베만 씨푸드", vi:"Quán Bé Mặn", addr:"Lô 14 Hoàng Sa, Mân Thái, Sơn Trà, Đà Nẵng", tip:"한국인에게 가장 알려진 해산물집. 수족관에서 고른 뒤 kg당 가격을 먼저 확인하세요" },
+      { ko:"반미 바랑", vi:"Bánh mì Bà Lan", addr:"62 Trưng Nữ Vương, Hải Châu, Đà Nẵng", tip:"현지인 줄 서는 반미. 아침에 사서 이동 중에 먹기 좋습니다" },
+      { ko:"콩카페", vi:"Cộng Cà Phê", addr:"96-98 Bạch Đằng, Hải Châu, Đà Nẵng", tip:"코코넛 커피가 대표 메뉴. 한낮 더위 피하기 좋습니다" },
+
+      { head:"호이안", ko:"반미 프엉", vi:"Bánh Mì Phượng", addr:"2B Phan Châu Trinh, Hội An, Quảng Nam", tip:"호이안에서 가장 유명한 반미. 줄이 깁니다. 포장해서 걸어가며 먹는 편이 낫습니다" },
+      { ko:"모닝글로리", vi:"Morning Glory Original", addr:"106 Nguyễn Thái Học, Hội An, Quảng Nam", tip:"호이안 대표 식당. 저녁엔 예약이 안전합니다. 까오러우와 화이트로즈를 한 번에" },
+      { ko:"반미 마담칸", vi:"Bánh Mì Madam Khánh", addr:"115 Trần Cao Vân, Hội An, Quảng Nam", tip:"프엉보다 줄이 짧습니다. 맛 차이는 취향" },
+      { ko:"화이트로즈 원조", vi:"Bông Hồng Trắng", addr:"533 Hai Bà Trưng, Hội An, Quảng Nam", tip:"화이트로즈를 직접 빚는 집. 만드는 걸 볼 수 있습니다" },
+      { ko:"까오러우 타인", vi:"Cao lầu Thanh", addr:"26 Thái Phiên, Hội An, Quảng Nam", tip:"까오러우 전문 로컬집. 호이안에서만 먹는 면입니다" },
+      { ko:"미스리 카페 22", vi:"Miss Ly Cafeteria 22", addr:"22 Nguyễn Huệ, Hội An, Quảng Nam", tip:"오래된 인기집. 화이트로즈와 완탕튀김" }
+    ]},
+
+    { key:"그 밖에", items:[
+      { ko:"한시장", vi:"Chợ Hàn", addr:"119 Trần Phú, Hải Châu 1, Hải Châu, Đà Nẵng", tip:"흥정 필수. 오후 6시쯤 닫는 가게가 많습니다", thumb:"market" },
       { ko:"롯데마트 다낭", vi:"Lotte Mart Đà Nẵng", addr:"6 Nại Nam, Hòa Cường Bắc, Hải Châu, Đà Nẵng", tip:"기념품 한 번에. 가격표 그대로라 편합니다" },
       { ko:"다낭 국제공항", vi:"Sân bay Quốc tế Đà Nẵng", addr:"Hòa Thuận Tây, Hải Châu, Đà Nẵng", tip:"시내에서 차로 10~15분. 국제선은 터미널 2" }
     ]}
   ],
-
   checklist: [
     { name:"서류 · 돈", items:["여권 (유효기간 6개월 이상)","항공권 e-티켓 캡처","호텔 바우처 2장 (무엉탄 · 멜리아)","여행자보험 증서","미화 달러 (현지 환전용)","신용카드 · 해외결제 열어두기","여권 사본 촬영본"] },
     { name:"전자기기", items:["유심 또는 이심","보조배터리 (기내 휴대만 가능)","충전기 · 케이블","멀티 어댑터","방수팩 (물놀이용)"] },
@@ -875,7 +911,7 @@ const fmtLong = iso => {
 };
 
 /* --- 상태 --- */
-const state = { tab: "plan", day: 0 };
+const state = { tab: "plan", day: 0, placeTab: 0 };
 const CHECK_KEY = "danang.checklist.v1";
 let checked = new Set();
 try { checked = new Set(JSON.parse(localStorage.getItem(CHECK_KEY) || "[]")); } catch (e) {}
@@ -1134,29 +1170,38 @@ function renderBookings(){
 
 /* --- 장소 --- */
 function renderPlaces(){
-  const html = TRIP.placeGroups.map(g => `
-    <div class="sec-head">${esc(g.name)}</div>
-    ${g.items.map(p => `
-      <div class="card">
-        ${shot(p.photo)}
-        <div class="pl-body">
-          <div class="pl-text">
-            <h3>${esc(p.ko)}</h3>
-            <p class="card-vi">${esc(p.vi)}</p>
-          </div>
-          ${thumb(p.thumb)}
-        </div>
-        <div class="addr">${esc(p.addr)}</div>
-        <div class="acts">
-          <a class="btn btn-solid" href="${esc(mapUrl(p.vi + ", " + p.addr))}" target="_blank" rel="noopener">${pinSvg()}지도</a>
-          <button class="btn" data-sheet="1" data-name="${esc(p.vi)}" data-addr="${esc(p.addr)}">기사님께 보여주기</button>
-          <button class="btn" data-copy="${esc(p.vi + ", " + p.addr)}" data-label="주소">${copySvg()}복사</button>
-        </div>
-        ${p.tip ? `<p class="tipline">${esc(p.tip)}</p>` : ""}
-      </div>`).join("")}`).join("");
+  const groups = TRIP.placeGroups;
+  const g = groups[state.placeTab] || groups[0];
 
-  $("#tab-place").innerHTML = html + `
-    <p class="tipline" style="padding:6px 4px 0">주소를 크게 띄워 택시 기사에게 보여주세요. 화면 밝기를 올리면 잘 보입니다.</p>`;
+  const seg = `<div class="seg" role="tablist">${groups.map((x, i) =>
+    `<button class="segbtn" role="tab" data-seg="${i}" aria-current="${i === state.placeTab}">${esc(x.key)}</button>`
+  ).join("")}</div>`;
+
+  const cards = g.items.map(p => `
+    ${p.head ? `<div class="sec-head">${esc(p.head)}</div>` : ""}
+    <div class="card">
+      ${shot(p.photo)}
+      <div class="pl-body">
+        <div class="pl-text">
+          <h3>${esc(p.ko)}</h3>
+          <p class="card-vi">${esc(p.vi)}</p>
+        </div>
+        ${thumb(p.thumb)}
+      </div>
+      <div class="addr">${esc(p.addr)}</div>
+      <div class="acts">
+        <a class="btn btn-solid" href="${esc(mapUrl(p.vi + ", " + p.addr))}" target="_blank" rel="noopener">${pinSvg()}지도</a>
+        <button class="btn" data-sheet="1" data-name="${esc(p.vi)}" data-addr="${esc(p.addr)}">기사님께 보여주기</button>
+        <button class="btn" data-copy="${esc(p.vi + ", " + p.addr)}" data-label="주소">${copySvg()}복사</button>
+      </div>
+      ${p.tip ? `<p class="tipline">${esc(p.tip)}</p>` : ""}
+    </div>`).join("");
+
+  const foot = state.placeTab === 2
+    ? '<p class="tipline" style="padding:6px 4px 0">평점과 영업시간은 자주 바뀝니다. 가기 전에 지도 버튼으로 한 번 확인하세요.</p>'
+    : '<p class="tipline" style="padding:6px 4px 0">주소를 크게 띄워 택시 기사에게 보여주세요. 화면 밝기를 올리면 잘 보입니다.</p>';
+
+  $("#tab-place").innerHTML = seg + cards + foot;
 }
 
 /* --- 준비물 --- */
@@ -1226,6 +1271,14 @@ document.addEventListener("click", e => {
     renderDaybar();
     renderTimeline();
     chip.scrollIntoView({ inline: "center", block: "nearest", behavior: "smooth" });
+    return;
+  }
+
+  const seg = e.target.closest("[data-seg]");
+  if (seg) {
+    state.placeTab = +seg.dataset.seg;
+    renderPlaces();
+    window.scrollTo(0, 0);
     return;
   }
 
