@@ -60,6 +60,8 @@
   /* 낮에는 카드에 테두리를 두지 않는다. 그림자와 면으로만 띄운다 */
   --card-edge:transparent;
   --tonal:#DCE9DF;
+  --sea-deep:#143826;
+  --fx-ico:rgba(255,255,255,.18);
   --r:18px;
   --r-s:12px;
   --tabh:68px;
@@ -88,6 +90,8 @@
   /* 밤에는 그림자가 안 보이므로 아주 얇은 선으로 면을 나눈다 */
   --d-card-edge:#2C4034;
   --d-tonal:#1E3125;
+  --d-sea-deep:#4E9C79;
+  --d-fx-ico:rgba(0,0,0,.16);
 }
 
 /* 어둡게는 직접 고른 경우에만. 기본은 밝은 쪽이다 */
@@ -114,6 +118,8 @@
     --clay-t:var(--d-clay-t);
     --card-edge:var(--d-card-edge);
     --tonal:var(--d-tonal);
+    --sea-deep:var(--d-sea-deep);
+    --fx-ico:var(--d-fx-ico);
     --shadow:none;
     --shadow-lift:none;
 }
@@ -292,23 +298,41 @@ main{padding:0 16px}
 .brief-next-v{display:block;font-size:18.5px;font-weight:700;letter-spacing:-.01em;margin-top:2px}
 
 /* ── 환율. 메인에는 한 줄짜리 버튼만 두고 실제 계산은 팝업에서 한다 ── */
+/* 이 화면에서 유일하게 꽉 채운 면이다. 눌러야 하는 것은 이것 하나뿐이라는 뜻이다.
+   아래쪽 단단한 그림자가 두께를 만들고, 누르면 그 두께만큼 실제로 내려간다. */
 .fxbtn{
-  display:flex;align-items:center;gap:11px;
-  width:100%;min-height:52px;
-  margin:13px 0 2px;padding:0 15px;
-  border-radius:var(--r-s);border:none;
-  background:var(--tonal);color:var(--sea);
-  text-align:left;
-}
-.fxbtn:active{filter:brightness(.94)}
-.fxbtn-ico{
-  flex:none;width:30px;height:30px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
+  display:flex;align-items:center;gap:12px;
+  width:100%;min-height:58px;
+  margin:14px 0 5px;padding:0 14px 0 12px;
+  border-radius:15px;border:none;
   background:var(--sea);color:var(--on-sea);
-  font-size:16px;font-weight:800;
+  text-align:left;
+  box-shadow:0 3px 0 var(--sea-deep), 0 5px 14px rgba(22,26,24,.20);
+  transition:transform .06s ease, box-shadow .06s ease;
 }
-.fxbtn-label{flex:1;font-size:16px;font-weight:750}
-.fxbtn-hint{flex:none;font-size:13.5px;font-weight:650;opacity:.8;font-variant-numeric:tabular-nums}
+.fxbtn:active{
+  transform:translateY(3px);
+  box-shadow:0 0 0 var(--sea-deep), 0 2px 6px rgba(22,26,24,.16);
+}
+.fxbtn-ico{
+  flex:none;width:34px;height:34px;border-radius:11px;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--fx-ico);
+  font-size:18px;font-weight:800;
+}
+.fxbtn-label{flex:none;font-size:16.5px;font-weight:750}
+.fxbtn-hint{
+  flex:1;text-align:right;
+  font-size:14px;font-weight:650;opacity:.82;
+  font-variant-numeric:tabular-nums;
+}
+.fxbtn-go{
+  flex:none;width:9px;height:9px;
+  border-right:2.5px solid currentColor;
+  border-top:2.5px solid currentColor;
+  transform:rotate(45deg);
+  opacity:.7;margin-left:2px;
+}
 
 /* 아래에서 올라오는 팝업. 엄지가 닿는 자리에 버튼이 모인다 */
 .modal{
@@ -1176,6 +1200,7 @@ function renderFxBar(){
       <span class="fxbtn-ico">₫</span>
       <span class="fxbtn-label">환율 계산기</span>
       <span class="fxbtn-hint">10만동 ≈ 5,500원</span>
+      <span class="fxbtn-go" aria-hidden="true"></span>
     </button>`;
 }
 
