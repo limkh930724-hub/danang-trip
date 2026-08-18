@@ -12,3 +12,7 @@ Desktop.ini
 node_modules/
 *.log
 *.bak
+
+# 공개 배포되므로 실제 예약번호·연락처는 여기에만 두고 커밋하지 않는다
+private/
+*.private.md
