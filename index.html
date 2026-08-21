@@ -217,7 +217,7 @@ a{color:inherit}
 .pill svg{width:17px;height:17px;flex:none}
 
 /* 그림 띠. 헤더 카드의 바닥을 채운다 */
-.hd-art{display:block;width:100%;height:158px}
+.hd-art{display:block;width:100%;height:126px}
 /* 밤에는 한 톤 낮춘다. 색면 자체는 그대로 둔다 */
 :root[data-theme="dark"] .hd-art{filter:brightness(.9) saturate(.92)}
 
@@ -313,14 +313,14 @@ main{padding:0 16px}
   background:
     radial-gradient(120% 100% at 88% 0%, rgba(232,185,62,.18) 0%, rgba(232,185,62,0) 66%),
     var(--card);
-  border:2px solid var(--sun);
+  border:1.5px solid var(--sunny);
   border-radius:var(--r);
   padding:16px 17px 17px;
   box-shadow:var(--shadow-lift);
 }
 .brief.is-wait{
   background:var(--card);
-  border-color:var(--line);border-width:1.5px;
+  border-color:var(--sunny);border-width:1.5px;
   box-shadow:var(--shadow);
 }
 .brief-eyebrow{
@@ -436,7 +436,7 @@ main{padding:0 16px}
 }
 .ti-card{
   background:var(--card);
-  border:1px solid var(--card-edge);
+  border:1px solid var(--sunny);
   border-radius:var(--r);
   padding:15px 16px 16px;
   box-shadow:var(--shadow);
@@ -486,7 +486,7 @@ main{padding:0 16px}
 /* 지난 일정은 물러나고, 진행 중인 하나만 앞으로 나온다 */
 .ti.is-past{opacity:.55}
 .ti.is-now .ti-card{
-  border-color:var(--sun);
+  border-color:var(--sunny);
   border-width:2.5px;
   background:var(--lantern-t);
   box-shadow:var(--shadow-lift);
@@ -827,7 +827,7 @@ footer{padding:28px 4px 22px;font-size:13.5px;color:var(--ink2);text-align:cente
   <!-- 헤더 그림. 손트라 앞바다를 납작한 색면으로만 그렸다.
        사진이 아니라 도형이라 용량이 거의 없고 어떤 화면 폭에서도 깨지지 않는다.
        viewBox 를 잘라내며 채우므로(slice) 좁은 폰에서는 가운데만 보인다. -->
-  <svg class="hd-art" viewBox="0 0 390 168" preserveAspectRatio="xMidYMid slice"
+  <svg class="hd-art" viewBox="0 20 390 134" preserveAspectRatio="xMidYMid slice"
        role="img" aria-labelledby="artTitle" xmlns="http://www.w3.org/2000/svg">
     <title id="artTitle">카약을 든 사람과 초록 강, 양옆의 바위산</title>
     <defs>
@@ -850,16 +850,16 @@ footer{padding:28px 4px 22px;font-size:13.5px;color:var(--ink2);text-align:cente
     <rect width="390" height="168" fill="#FFC83D"/>
 
     <!-- 왼쪽 바위산. 매끈한 삼각형이 아니라 울퉁불퉁한 덩어리다 -->
-    <path d="M-20 96 L-6 54 L14 40 L34 20 L52 34 L64 26 L82 52 L96 44 L112 96 Z" fill="#9AA6AC"/>
-    <path d="M34 20 L52 34 L44 96 L18 96 Z" fill="#7C8990" opacity=".85"/>
+    <path d="M-20 96 L-6 56 L14 44 L34 27 L52 38 L64 31 L82 55 L96 47 L112 96 Z" fill="#9AA6AC"/>
+    <path d="M34 27 L52 38 L44 96 L18 96 Z" fill="#7C8990" opacity=".85"/>
     <g stroke="#6B7981" stroke-width="1.6" opacity=".7" fill="none">
-      <path d="M34 24 L28 48 L36 62"/><path d="M64 30 L70 52"/>
+      <path d="M34 31 L28 50 L36 62"/><path d="M64 35 L70 54"/>
     </g>
     <!-- 오른쪽 바위산 -->
-    <path d="M262 96 L280 60 L300 30 L318 44 L336 14 L358 40 L376 30 L404 96 Z" fill="#9AA6AC"/>
-    <path d="M336 14 L358 40 L352 96 L322 96 Z" fill="#7C8990" opacity=".85"/>
+    <path d="M262 96 L280 62 L300 36 L318 47 L336 24 L358 44 L376 35 L404 96 Z" fill="#9AA6AC"/>
+    <path d="M336 24 L358 44 L352 96 L322 96 Z" fill="#7C8990" opacity=".85"/>
     <g stroke="#6B7981" stroke-width="1.6" opacity=".7" fill="none">
-      <path d="M300 34 L294 56 L302 70"/><path d="M358 44 L364 66"/>
+      <path d="M300 40 L294 58 L302 70"/><path d="M358 48 L364 68"/>
     </g>
     <!-- 가운데 먼 언덕 -->
     <path d="M96 96 L140 66 L186 96 Z" fill="#B6C0C4"/>
@@ -903,7 +903,7 @@ footer{padding:28px 4px 22px;font-size:13.5px;color:var(--ink2);text-align:cente
     <path d="M-10 140 q120 -12 210 -2 q104 11 210 -8 v42 h-410 Z" fill="#2F7A4A"/>
 
     <!-- 카약을 세워 든 사람 -->
-    <g transform="translate(286 156)">
+    <g transform="translate(286 150)">
       <!-- 다리와 주황 반바지 -->
       <path d="M-7 -20 h14 v13 h-14 Z" fill="#E4572E"/>
       <path d="M-6 -8 h4.5 v10 h-4.5 Z M1.5 -8 h4.5 v10 h-4.5 Z" fill="#8A5A32"/>
