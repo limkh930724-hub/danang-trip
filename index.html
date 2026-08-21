@@ -513,7 +513,7 @@ main{padding:0 16px}
 /* 장소 탭 안의 하위 탭 */
 .seg{
   display:flex;gap:8px;
-  margin:16px 0 2px;
+  margin:18px 0 0;
   overflow-x:auto;-webkit-overflow-scrolling:touch;
   scrollbar-width:none;
 }
@@ -528,6 +528,16 @@ main{padding:0 16px}
   white-space:nowrap;
 }
 .segbtn[aria-current="true"]{background:var(--sea);color:var(--on-sea)}
+.seg-note{
+  margin:12px 2px 16px;
+  font-size:13px;line-height:1.5;color:var(--ink2);
+}
+.seg-note b{font-weight:750}
+.seg-note{
+  margin:12px 2px 16px;
+  font-size:13px;line-height:1.5;color:var(--ink2);
+}
+.seg-note b{font-weight:750}
 .segbtn:active{filter:brightness(.94)}
 
 /* 관광지 썸네일. 글줄 옆에 붙어 세로 자리를 거의 안 먹는다 */
@@ -1006,39 +1016,40 @@ const TRIP = {
      head 가 붙은 항목 앞에는 작은 구분 제목이 들어간다. */
   placeGroups: [
     { key:"지역", items:[
-      { ko:"미케비치", vi:"Bãi biển Mỹ Khê", addr:"Võ Nguyên Giáp, Phước Mỹ, Sơn Trà, Đà Nẵng", tip:"첫 숙소에서 도보 · 해질 무렵", thumb:"beach" },
-      { ko:"용다리", vi:"Cầu Rồng", addr:"Nguyễn Văn Linh, Hải Châu, Đà Nẵng", tip:"불쇼 토·일 21:00 · 숙소에서 도보 6분", thumb:"dragon" },
+      { ko:"미케비치", vi:"Bãi biển Mỹ Khê", addr:"Võ Nguyên Giáp, Phước Mỹ, Sơn Trà, Đà Nẵng", tip:"차로 7분 · 해질 무렵이 좋음", thumb:"beach" },
+      { ko:"용다리", vi:"Cầu Rồng", addr:"Nguyễn Văn Linh, Hải Châu, Đà Nẵng", tip:"도보 6분 · 불쇼 토·일 21:00", thumb:"dragon" },
       { ko:"바나힐", vi:"Bà Nà Hills", addr:"Thôn An Sơn, Hòa Ninh, Hòa Vang, Đà Nẵng", tip:"차로 50분 · 산 위 10도 낮음", thumb:"bana" },
       { ko:"호이안 올드타운", vi:"Phố cổ Hội An", addr:"Minh An, Hội An, Quảng Nam", tip:"차로 45분 · 입장권 12만동 · 밤 등불", thumb:"hoian" },
-      { ko:"린응사 (해수관음상)", vi:"Chùa Linh Ứng", addr:"Hoàng Sa, Thọ Quang, Sơn Trà, Đà Nẵng", tip:"무료 입장. 어깨·무릎 가리는 옷", thumb:"linhung" },
-      { ko:"오행산 (마블마운틴)", vi:"Ngũ Hành Sơn", addr:"81 Huyền Trân Công Chúa, Hòa Hải, Ngũ Hành Sơn, Đà Nẵng", tip:"엘리베이터 별도 요금 · 계단 가파름", thumb:"marble" },
-      { ko:"다낭 대성당 (핑크성당)", vi:"Nhà thờ Chính tòa Đà Nẵng", addr:"156 Trần Phú, Hải Châu, Đà Nẵng", tip:"미사 시간엔 내부 관람 제한", thumb:"church" }
+      { ko:"린응사 (해수관음상)", vi:"Chùa Linh Ứng", addr:"Hoàng Sa, Thọ Quang, Sơn Trà, Đà Nẵng", tip:"차로 20분 · 어깨·무릎 가리는 옷", thumb:"linhung" },
+      { ko:"오행산 (마블마운틴)", vi:"Ngũ Hành Sơn", addr:"81 Huyền Trân Công Chúa, Hòa Hải, Ngũ Hành Sơn, Đà Nẵng", tip:"차로 15분 · 엘리베이터 별도 요금", thumb:"marble" },
+      { ko:"다낭 대성당 (핑크성당)", vi:"Nhà thờ Chính tòa Đà Nẵng", addr:"156 Trần Phú, Hải Châu, Đà Nẵng", tip:"차로 8분 · 미사 시간엔 관람 제한", thumb:"church" }
     ]},
 
     { key:"숙소", items:[
-      { ko:"무엉탄 그랜드 다낭", vi:"Khách sạn Mường Thanh Grand Đà Nẵng", addr:"962 Ngô Quyền, Phước Mỹ, Sơn Trà, Đà Nẵng", tip:"9/5–9/6 1박 · 미케비치 쪽", photo:"mt" },
-      { ko:"멜리아 빈펄 리버프론트", vi:"Meliá Vinpearl Đà Nẵng Riverfront", addr:"341 Đ. Trần Hưng Đạo, An Hải Bắc, Sơn Trà, Đà Nẵng", tip:"9/6–9/8 2박 · 용다리 도보 6분", photo:"ml" }
+      { ko:"무엉탄 그랜드 다낭", vi:"Khách sạn Mường Thanh Grand Đà Nẵng", addr:"962 Ngô Quyền, Phước Mỹ, Sơn Trà, Đà Nẵng", tip:"9/5–9/6 1박 · 멜리아에서 차로 7분", photo:"mt" },
+      { ko:"멜리아 빈펄 리버프론트", vi:"Meliá Vinpearl Đà Nẵng Riverfront", addr:"341 Đ. Trần Hưng Đạo, An Hải Bắc, Sơn Trà, Đà Nẵng", tip:"9/6–9/8 2박 · 이동 시간 기준점", photo:"ml" }
     ]},
 
     { key:"식당", items:[
-      { ko:"목꽌 씨푸드", vi:"Mộc Quán Seafood Đà Nẵng", addr:"26 Tô Hiến Thành, Phước Mỹ, Sơn Trà, Đà Nẵng", tip:"미쉐린 가이드 등재 · 수조에서 직접 고름", thumb:"seafood" },
-      { ko:"송비엔 씨푸드", vi:"Sóng Biển Seafood Đà Nẵng", addr:"260 Võ Nguyên Giáp, Sơn Trà, Đà Nẵng", tip:"미케비치 해변도로 · 무엉탄에서 가까움", thumb:"seafood" },
-      { ko:"안토이", vi:"Ăn Thôi", addr:"114 Bạch Đằng, Hải Châu, Đà Nẵng", tip:"미쉐린 빕구르망 · 한강변 베트남 가정식", thumb:"nemlui" },
-      { ko:"반미 AA 해피브레드", vi:"Bánh mì AA Happy Bread", addr:"14 Hùng Vương, Hải Châu, Đà Nẵng", tip:"한국인에게 유명한 반미 · 지점 여럿", thumb:"banhmi" }
+      { head:"다낭 시내", ko:"목꽌 씨푸드", vi:"Mộc Quán Seafood Đà Nẵng", addr:"26 Tô Hiến Thành, Phước Mỹ, Sơn Trà, Đà Nẵng", tip:"차로 8분 · 미쉐린 가이드 등재", thumb:"seafood" },
+      { ko:"송비엔 씨푸드", vi:"Sóng Biển Seafood Đà Nẵng", addr:"260 Võ Nguyên Giáp, Sơn Trà, Đà Nẵng", tip:"차로 10분 · 미케비치 해변도로", thumb:"seafood" },
+      { ko:"안토이", vi:"Ăn Thôi", addr:"114 Bạch Đằng, Hải Châu, Đà Nẵng", tip:"차로 8분 · 미쉐린 빕구르망", thumb:"nemlui" },
+      { ko:"반미 AA 해피브레드", vi:"Bánh mì AA Happy Bread", addr:"14 Hùng Vương, Hải Châu, Đà Nẵng", tip:"차로 10분 · 지점 여럿이라 확인", thumb:"banhmi" },
+      { head:"호이안", ko:"파 라운지 호이안", vi:"Fa Lounge Hội An", addr:"82 Phan Châu Trinh, Cẩm Phô, Hội An, Quảng Nam", tip:"차로 45분 · 호이안 올드타운 안", thumb:"caolau" }
     ]},
 
     { key:"그 밖에", items:[
-      { head:"마사지", ko:"참스파 그랜드", vi:"Charm Spa Grand Đà Nẵng", addr:"36 Thái Phiên, Phước Ninh, Hải Châu, Đà Nẵng", tip:"한국인에게 가장 알려진 곳 · 예약 권장", thumb:"spa" },
-      { ko:"참스파 (2호점)", vi:"Charm Spa Đà Nẵng", addr:"283 Nguyễn Chí Thanh, Hải Châu, Đà Nẵng", tip:"같은 브랜드 다른 지점 · 예약 시 지점 확인", thumb:"spa" },
-      { ko:"퀸스파", vi:"Queen Spa Đà Nẵng", addr:"144 Phạm Cự Lượng, Sơn Trà, Đà Nẵng", tip:"미케비치 쪽 · 대나무 마사지로 알려짐", thumb:"spa" },
-      { ko:"허벌 스파", vi:"Herbal Spa Đà Nẵng", addr:"201 Dương Đình Nghệ, An Hải Bắc, Sơn Trà, Đà Nẵng", tip:"멜리아에서 차로 5분 · 예약 권장", thumb:"spa" },
-      { ko:"트리 스파", vi:"Tree Spa Đà Nẵng", addr:"527 Trần Hưng Đạo, An Hải Tây, Sơn Trà, Đà Nẵng", tip:"멜리아와 같은 길 · 걸어갈 거리", thumb:"spa" },
-      { ko:"바빌론 가든 스파", vi:"Babylon Garden Spa", addr:"30 Hà Bổng, Phước Mỹ, Sơn Trà, Đà Nẵng", tip:"무엉탄·미케비치 쪽", thumb:"spa" },
-      { ko:"민 럭셔리 스파", vi:"Min Luxury Spa", addr:"2 Tô Hiến Thành, Phước Mỹ, Sơn Trà, Đà Nẵng", tip:"미케비치 근처", thumb:"spa" },
-      { head:"쇼핑 · 그 밖에", ko:"썬짜 야시장", vi:"Chợ đêm Sơn Trà", addr:"Lý Nam Đế, An Hải Trung, Sơn Trà, Đà Nẵng", tip:"용다리 바로 옆 · 저녁 6시부터", thumb:"nightmkt" },
-      { ko:"한시장", vi:"Chợ Hàn", addr:"119 Trần Phú, Hải Châu 1, Hải Châu, Đà Nẵng", tip:"흥정 필수 · 오후 6시쯤 닫음", thumb:"market" },
-      { ko:"롯데마트 다낭", vi:"Lotte Mart Đà Nẵng", addr:"6 Nại Nam, Hòa Cường Bắc, Hải Châu, Đà Nẵng", tip:"기념품 한 번에 · 정찰제", thumb:"mart" },
-      { ko:"다낭 국제공항", vi:"Sân bay Quốc tế Đà Nẵng", addr:"Hòa Thuận Tây, Hải Châu, Đà Nẵng", tip:"시내에서 10~15분 · 국제선 터미널 2", thumb:"airport" }
+      { head:"마사지", ko:"참스파 그랜드", vi:"Charm Spa Grand Đà Nẵng", addr:"36 Thái Phiên, Phước Ninh, Hải Châu, Đà Nẵng", tip:"차로 10분 · 예약 권장", thumb:"spa" },
+      { ko:"참스파 (2호점)", vi:"Charm Spa Đà Nẵng", addr:"283 Nguyễn Chí Thanh, Hải Châu, Đà Nẵng", tip:"차로 10분 · 예약 시 지점 확인", thumb:"spa" },
+      { ko:"퀸스파", vi:"Queen Spa Đà Nẵng", addr:"144 Phạm Cự Lượng, Sơn Trà, Đà Nẵng", tip:"차로 8분 · 대나무 마사지", thumb:"spa" },
+      { ko:"허벌 스파", vi:"Herbal Spa Đà Nẵng", addr:"201 Dương Đình Nghệ, An Hải Bắc, Sơn Trà, Đà Nẵng", tip:"차로 5분 · 예약 권장", thumb:"spa" },
+      { ko:"트리 스파", vi:"Tree Spa Đà Nẵng", addr:"527 Trần Hưng Đạo, An Hải Tây, Sơn Trà, Đà Nẵng", tip:"도보 12분 · 멜리아와 같은 길", thumb:"spa" },
+      { ko:"바빌론 가든 스파", vi:"Babylon Garden Spa", addr:"30 Hà Bổng, Phước Mỹ, Sơn Trà, Đà Nẵng", tip:"차로 8분 · 미케비치 쪽", thumb:"spa" },
+      { ko:"민 럭셔리 스파", vi:"Min Luxury Spa", addr:"2 Tô Hiến Thành, Phước Mỹ, Sơn Trà, Đà Nẵng", tip:"차로 8분 · 미케비치 근처", thumb:"spa" },
+      { head:"쇼핑 · 그 밖에", ko:"썬짜 야시장", vi:"Chợ đêm Sơn Trà", addr:"Lý Nam Đế, An Hải Trung, Sơn Trà, Đà Nẵng", tip:"도보 5분 · 저녁 6시부터", thumb:"nightmkt" },
+      { ko:"한시장", vi:"Chợ Hàn", addr:"119 Trần Phú, Hải Châu 1, Hải Châu, Đà Nẵng", tip:"차로 8분 · 흥정 필수 · 6시쯤 닫음", thumb:"market" },
+      { ko:"롯데마트 다낭", vi:"Lotte Mart Đà Nẵng", addr:"6 Nại Nam, Hòa Cường Bắc, Hải Châu, Đà Nẵng", tip:"차로 12분 · 정찰제라 편함", thumb:"mart" },
+      { ko:"다낭 국제공항", vi:"Sân bay Quốc tế Đà Nẵng", addr:"Hòa Thuận Tây, Hải Châu, Đà Nẵng", tip:"차로 12분 · 국제선 터미널 2", thumb:"airport" }
     ]}
   ],
   checklist: [
@@ -1418,7 +1429,8 @@ function renderPlaces(){
 
   const seg = `<div class="seg" role="tablist">${groups.map((x, i) =>
     `<button class="segbtn" role="tab" data-seg="${i}" aria-current="${i === state.placeTab}">${esc(x.key)}</button>`
-  ).join("")}</div>`;
+  ).join("")}</div>
+  <p class="seg-note">이동 시간은 모두 <b>멜리아 빈펄 리버프론트</b> 기준입니다. 어림값이니 지도로 한 번 확인하세요.</p>`;
 
   const cards = g.items.map(p => `
     ${p.head ? `<div class="sec-head">${esc(p.head)}</div>` : ""}
