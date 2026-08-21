@@ -179,18 +179,20 @@ a{color:inherit}
   font-size:11.5px;font-weight:700;
   letter-spacing:.22em;
   color:rgba(244,248,240,.66);
+  padding-right:52px;
 }
 .hd-title{
   font-size:32px;font-weight:800;
   letter-spacing:-.025em;line-height:1.12;
   margin-top:7px;
+  padding-right:52px;      /* 오른쪽 위 테마 버튼 자리 */
 }
 .hd-meta{
   font-size:13.5px;margin-top:9px;
   color:rgba(244,248,240,.78);
 }
 .hd-clock{
-  display:flex;gap:20px;align-items:baseline;
+  display:flex;flex-wrap:wrap;gap:10px 16px;align-items:baseline;
   margin-top:16px;padding-top:14px;
   border-top:1px solid rgba(244,248,240,.20);
 }
@@ -203,16 +205,15 @@ a{color:inherit}
 
 /* 홈 화면에 설치. 설치할 수 없는 환경에서는 아예 그리지 않는다 */
 .installbtn{
-  position:absolute;top:0;right:52px;z-index:2;
   display:none;align-items:center;gap:7px;
-  height:44px;padding:0 15px;
-  border-radius:22px;color:#F4F8F0;
-  background:rgba(9,24,16,.42);
-  backdrop-filter:blur(6px);
-  -webkit-backdrop-filter:blur(6px);
-  font-size:14px;font-weight:750;white-space:nowrap;
+  margin-left:auto;align-self:center;
+  height:40px;padding:0 13px;
+  border-radius:20px;color:#F4F8F0;
+  background:rgba(244,248,240,.16);
+  border:1px solid rgba(244,248,240,.30);
+  font-size:13.5px;font-weight:750;white-space:nowrap;
 }
-.installbtn.on{display:flex}
+.installbtn.on{display:inline-flex}
 .installbtn:active{background:rgba(9,24,16,.62)}
 .installbtn svg{width:17px;height:17px}
 
@@ -776,10 +777,6 @@ footer{padding:28px 4px 22px;font-size:13.5px;color:var(--ink2);text-align:cente
 
 <header class="hd">
   <div class="hd-inner">
-    <button class="installbtn" id="installbtn" type="button">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5v11M7.5 10.5l4.5 4.5 4.5-4.5M4.5 19.5h15"/></svg>
-      <span>앱으로 설치</span>
-    </button>
     <button class="themebtn" id="themebtn" type="button" aria-label="밝게 어둡게 바꾸기">
       <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.6v2.2M12 19.2v2.2M4.5 4.5l1.6 1.6M17.9 17.9l1.6 1.6M2.6 12h2.2M19.2 12h2.2M4.5 19.5l1.6-1.6M17.9 6.1l1.6-1.6"/></svg>
       <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.2A8.2 8.2 0 0 1 9.8 4a8.4 8.4 0 1 0 10.2 10.2z"/></svg>
@@ -790,6 +787,10 @@ footer{padding:28px 4px 22px;font-size:13.5px;color:var(--ink2);text-align:cente
     <div class="hd-clock">
       <div><b class="num" id="clockDad">--:--</b><span>다낭</span></div>
       <div><b class="num" id="clockKst">--:--</b><span>한국</span></div>
+      <button class="installbtn" id="installbtn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5v11M7.5 10.5l4.5 4.5 4.5-4.5M4.5 19.5h15"/></svg>
+        <span>앱 설치</span>
+      </button>
     </div>
   </div>
 </header>
@@ -1723,8 +1724,9 @@ function boot(){
   if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
     navigator.serviceWorker.register("sw.js").catch(() => {});
   }
-  /* 아이폰은 설치 이벤트가 없으므로, 아직 설치 전이면 버튼을 바로 띄운다 */
-  if (isIOS() && !isStandalone()) setTimeout(showInstallBtn, 400);
+  /* 아직 설치하지 않았고 웹으로 열었으면 버튼을 띄운다.
+     크롬의 설치 이벤트를 기다리면 첫 방문에 안 뜨는 일이 잦다. */
+  if (!isStandalone() && location.protocol.startsWith("http")) showInstallBtn();
 
   try {
     const saved = localStorage.getItem(THEME_KEY);
