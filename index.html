@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#173A28">
+<meta name="theme-color" content="#FBFBFA">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="다낭 여행">
@@ -49,6 +49,10 @@
   --jade:#1E5137;
   --roast:#7F3310;
   --clay:#5A4632;
+  /* 헤더 면. 밝고 진한 노랑 한 판. 라이트·다크 모두 같은 값을 쓴다 */
+  --sunny:#FFC83D;
+  --sunny-ink:#1A2A12;
+  --sunny-ink2:#2B3618;
   /* 황동빛. 잎 사이로 든 빛이자 옻칠의 금박. 지금 이 순간에만 쓴다 */
   --lantern:#6B4A05;
   --lantern-hi:#C99A26;
@@ -65,8 +69,8 @@
   --tonal:#DCE9DF;
   --sea-deep:#143826;
   --fx-ico:rgba(255,255,255,.18);
-  --r:18px;
-  --r-s:12px;
+  --r:22px;
+  --r-s:14px;
   --tabh:68px;
 
   /* ── 밤: 같은 손트라, 해가 진 뒤. 아래 매핑이 골라 쓴다 ── */
@@ -151,71 +155,85 @@ a{color:inherit}
 .num{font-variant-numeric:tabular-nums;letter-spacing:-.02em}
 
 /* ── 헤더 ── */
-/* 헤더. 색 띠 대신 실제 다낭 사진을 깔고 그 위에 글자를 얹는다.
-   여행 페이지는 여행처럼 보여야 한다. 사진은 바나힐 골든브릿지다. */
+/* 노란 색면 한 판을 카드처럼 놓고 그 안에 제목 · 시계 · 알약 버튼을 쌓는다.
+   사진은 아래쪽 띠로만 남아 색면과 부딪히지 않는다. */
 .hd{
-  position:relative;
-  overflow:hidden;
-  color:#F4F8F0;
-  padding:calc(env(safe-area-inset-top) + 26px) 20px 22px;
-  background:var(--canopy-deep);
+  background:var(--paper);
+  padding:calc(env(safe-area-inset-top) + 10px) 12px 0;
 }
-.hd::before{
-  content:"";position:absolute;inset:0;
-  background-image:var(--hero);
-  background-size:cover;
-  background-position:center 58%;
+/* 노란 색면 카드. 이 안에 제목 · 시계 · 알약 · 사진이 차례로 들어간다 */
+.hd-card{
+  position:relative;overflow:hidden;
+  max-width:620px;margin:0 auto;
+  background:var(--sunny);
+  color:var(--sunny-ink);
+  border-radius:28px;
+  padding-top:22px;
+  box-shadow:0 6px 20px rgba(120,84,0,.16);
 }
-/* 글자가 앉을 아래쪽을 더 짙게. 사진은 질감으로만 남는다 */
-.hd::after{
-  content:"";position:absolute;inset:0;
-  background:linear-gradient(176deg,
-    rgba(9,24,16,.46) 0%,
-    rgba(9,24,16,.74) 52%,
-    rgba(9,24,16,.93) 100%);
-}
-.hd-inner{position:relative;z-index:1;max-width:620px;margin:0 auto}
+.hd-inner{position:relative;padding:0 20px}
 .hd-eyebrow{
-  font-size:11.5px;font-weight:700;
+  font-size:11.5px;font-weight:800;
   letter-spacing:.22em;
-  color:rgba(244,248,240,.66);
-  padding-right:52px;
+  color:var(--sunny-ink2);
+  padding-right:56px;
 }
 .hd-title{
-  font-size:32px;font-weight:800;
-  letter-spacing:-.025em;line-height:1.12;
-  margin-top:7px;
-  padding-right:52px;      /* 오른쪽 위 테마 버튼 자리 */
+  font-size:34px;font-weight:800;
+  letter-spacing:-.03em;line-height:1.1;
+  margin-top:6px;
+  padding-right:56px;      /* 오른쪽 위 테마 버튼 자리 */
 }
 .hd-meta{
-  font-size:13.5px;margin-top:9px;
-  color:rgba(244,248,240,.78);
+  font-size:13.5px;font-weight:650;margin-top:8px;
+  color:var(--sunny-ink2);
 }
 .hd-clock{
   display:flex;flex-wrap:wrap;gap:10px 16px;align-items:baseline;
-  margin-top:16px;padding-top:14px;
-  border-top:1px solid rgba(244,248,240,.20);
+  margin-top:14px;
 }
 .hd-clock div{display:flex;align-items:baseline;gap:6px}
 .hd-clock b{
   font-size:19px;font-weight:800;letter-spacing:-.03em;
   font-variant-numeric:tabular-nums;
 }
-.hd-clock span{font-size:12px;color:rgba(244,248,240,.7);letter-spacing:.04em}
+.hd-clock span{font-size:12px;font-weight:700;color:var(--sunny-ink2);letter-spacing:.04em}
+
+/* 알약 버튼 줄. 흰 면이라 노랑 위에서 저절로 떠 보인다 */
+.quick{
+  display:flex;gap:9px;
+  margin:16px -20px 0;padding:0 20px 18px;
+  overflow-x:auto;-webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+.quick::-webkit-scrollbar{display:none}
+.pill{
+  flex:none;display:inline-flex;align-items:center;gap:8px;
+  min-height:44px;padding:0 17px;
+  border-radius:999px;
+  background:#FFFFFF;color:#16240E;
+  font-size:14.5px;font-weight:750;white-space:nowrap;
+  box-shadow:0 2px 7px rgba(72,48,0,.16);
+}
+.pill:active{transform:scale(.97)}
+.pill svg{width:17px;height:17px;flex:none}
+
+/* 사진 띠. 헤더 카드의 바닥을 채운다 */
+.hd-art{
+  height:150px;
+  background-image:var(--hero);
+  background-size:cover;
+  background-position:center 58%;
+}
 
 /* 홈 화면에 설치. 설치할 수 없는 환경에서는 아예 그리지 않는다 */
-.installbtn{
-  display:none;align-items:center;gap:7px;
-  margin-left:auto;align-self:center;
-  height:40px;padding:0 13px;
-  border-radius:20px;color:#F4F8F0;
-  background:rgba(244,248,240,.16);
-  border:1px solid rgba(244,248,240,.30);
-  font-size:13.5px;font-weight:750;white-space:nowrap;
-}
+.installbtn{display:none}
 .installbtn.on{display:inline-flex}
-.installbtn:active{background:rgba(9,24,16,.62)}
-.installbtn svg{width:17px;height:17px}
+/* 홈 화면 아이콘으로 연 뒤에는 설치 버튼이 필요 없다.
+   자바스크립트 판단이 어긋나도 이 규칙이 먼저 막아준다 */
+@media (display-mode: standalone), (display-mode: minimal-ui), (display-mode: fullscreen){
+  .installbtn, .installbtn.on{display:none}
+}
 
 /* 설치 방법 안내 (아이폰용) */
 .howto{margin-top:4px}
@@ -234,15 +252,14 @@ a{color:inherit}
 .howto-note{margin-top:14px;font-size:13.5px;line-height:1.55;color:var(--ink2)}
 
 .themebtn{
-  position:absolute;top:0;right:0;z-index:2;
+  position:absolute;top:0;right:20px;z-index:2;
   width:44px;height:44px;
   display:flex;align-items:center;justify-content:center;
-  border-radius:50%;color:#F4F8F0;
-  background:rgba(9,24,16,.42);
-  backdrop-filter:blur(6px);
-  -webkit-backdrop-filter:blur(6px);
+  border-radius:50%;
+  color:#16240E;background:#FFFFFF;
+  box-shadow:0 2px 7px rgba(72,48,0,.18);
 }
-.themebtn:active{background:rgba(9,24,16,.62)}
+.themebtn:active{transform:scale(.95)}
 .themebtn svg{width:21px;height:21px}
 .themebtn .i-moon{display:none}
 .themebtn .i-sun{display:block}
@@ -332,43 +349,7 @@ main{padding:0 16px}
 }
 .brief-next-v{display:block;font-size:18.5px;font-weight:700;letter-spacing:-.01em;margin-top:2px}
 
-/* ── 환율. 메인에는 한 줄짜리 버튼만 두고 실제 계산은 팝업에서 한다 ── */
-/* 이 화면에서 유일하게 꽉 채운 면이다. 눌러야 하는 것은 이것 하나뿐이라는 뜻이다.
-   아래쪽 단단한 그림자가 두께를 만들고, 누르면 그 두께만큼 실제로 내려간다. */
-.fxbtn{
-  display:flex;align-items:center;gap:12px;
-  width:100%;min-height:58px;
-  margin:14px 0 5px;padding:0 14px 0 12px;
-  border-radius:15px;border:none;
-  background:var(--sea);color:var(--on-sea);
-  text-align:left;
-  box-shadow:0 3px 0 var(--sea-deep), 0 5px 14px rgba(22,26,24,.20);
-  transition:transform .06s ease, box-shadow .06s ease;
-}
-.fxbtn:active{
-  transform:translateY(3px);
-  box-shadow:0 0 0 var(--sea-deep), 0 2px 6px rgba(22,26,24,.16);
-}
-.fxbtn-ico{
-  flex:none;width:34px;height:34px;border-radius:11px;
-  display:flex;align-items:center;justify-content:center;
-  background:var(--fx-ico);
-  font-size:18px;font-weight:800;
-}
-.fxbtn-label{flex:none;font-size:16.5px;font-weight:750}
-.fxbtn-hint{
-  flex:1;text-align:right;
-  font-size:14px;font-weight:650;opacity:.82;
-  font-variant-numeric:tabular-nums;
-}
-.fxbtn-go{
-  flex:none;width:9px;height:9px;
-  border-right:2.5px solid currentColor;
-  border-top:2.5px solid currentColor;
-  transform:rotate(45deg);
-  opacity:.7;margin-left:2px;
-}
-
+/* ── 환율. 헤더 알약에서 열고 계산은 팝업에서 한다 ── */
 /* 아래에서 올라오는 팝업. 엄지가 닿는 자리에 버튼이 모인다 */
 .modal{
   position:fixed;inset:0;z-index:80;
@@ -629,9 +610,9 @@ main{padding:0 16px}
 
 /* ── 카드 공통 ── */
 .sec-head{
-  padding:24px 2px 11px;
-  font-size:13.5px;font-weight:800;letter-spacing:.09em;
-  color:var(--ink2);
+  padding:26px 2px 12px;
+  font-size:20px;font-weight:800;letter-spacing:-.02em;
+  color:var(--ink);
 }
 .card{
   background:var(--card);
@@ -720,7 +701,13 @@ main{padding:0 16px}
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
   color:var(--ink2);
 }
-.tab svg{width:25px;height:25px}
+.tab svg{
+  width:25px;height:25px;
+  padding:4px 14px;box-sizing:content-box;
+  border-radius:999px;
+  transition:background .15s ease;
+}
+.tab[aria-current="true"] svg{background:var(--tonal)}
 .tab span{font-size:12.5px;font-weight:750}
 .tab[aria-current="true"]{color:var(--sea)}
 .tab[aria-current="true"] span{font-weight:800}
@@ -776,6 +763,7 @@ footer{padding:28px 4px 22px;font-size:13.5px;color:var(--ink2);text-align:cente
 <body>
 
 <header class="hd">
+ <div class="hd-card">
   <div class="hd-inner">
     <button class="themebtn" id="themebtn" type="button" aria-label="밝게 어둡게 바꾸기">
       <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.6v2.2M12 19.2v2.2M4.5 4.5l1.6 1.6M17.9 17.9l1.6 1.6M2.6 12h2.2M19.2 12h2.2M4.5 19.5l1.6-1.6M17.9 6.1l1.6-1.6"/></svg>
@@ -787,12 +775,25 @@ footer{padding:28px 4px 22px;font-size:13.5px;color:var(--ink2);text-align:cente
     <div class="hd-clock">
       <div><b class="num" id="clockDad">--:--</b><span>다낭</span></div>
       <div><b class="num" id="clockKst">--:--</b><span>한국</span></div>
-      <button class="installbtn" id="installbtn" type="button">
+    </div>
+
+    <div class="quick">
+      <button class="pill" id="fxOpen" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.6"/><path d="M9.2 9.4h5.6M9.2 13h5.6M12 7.6v8.8"/></svg>
+        <span>환율</span>
+      </button>
+      <button class="pill" id="nowJump" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.6"/><path d="M12 7.4V12l3.2 2"/></svg>
+        <span>지금 일정</span>
+      </button>
+      <button class="pill installbtn" id="installbtn" type="button">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5v11M7.5 10.5l4.5 4.5 4.5-4.5M4.5 19.5h15"/></svg>
         <span>앱 설치</span>
       </button>
     </div>
   </div>
+  <div class="hd-art" role="img" aria-label="바나힐 골든브릿지"></div>
+ </div>
 </header>
 
 <div class="daybar" id="daybar">
@@ -802,7 +803,6 @@ footer{padding:28px 4px 22px;font-size:13.5px;color:var(--ink2);text-align:cente
 <main>
   <section id="tab-plan">
     <div id="brief"></div>
-    <div id="fxbar"></div>
     <div class="day-head">
       <h2 id="dayTitle"></h2>
       <p id="dayMeta"></p>
@@ -1093,6 +1093,8 @@ const TRIP = {
       { ko:"반미 코티엔", vi:"Bánh Mì Cô Tiên", addr:"Kiệt 80/10 Trần Phú, Hải Châu 1, Hải Châu, Đà Nẵng", tip:"차로 8분 · 골목 안쪽 · 한 개 2만동 안팎", thumb:"banhmi" },
       { ko:"냐고비엣", vi:"Nhà Gỗ Việt", addr:"49-51 Nguyễn Thái Học, Hải Châu, Đà Nẵng", tip:"차로 8분 · 한시장 바로 옆 · 쌀국수·분짜", thumb:"nemlui" },
       { ko:"피자 4P's 인도차이나", vi:"Pizza 4P's Indochina", addr:"74 Bạch Đằng, 2층 Indochina Riverside, Hải Châu, Đà Nẵng", tip:"차로 8분 · 용다리 근처 · 11시~22시", thumb:"pizza" },
+      { head:"카페", ko:"카페그린", vi:"Cafe Green", addr:"54 Nguyễn Thái Học, Hải Châu 1, Hải Châu, Đà Nẵng", tip:"차로 8분 · 한시장 근처 · 망고빙수 · 9시~20시" },
+      { ko:"콩카페 (박당점)", vi:"Cộng Cà Phê Bạch Đằng", addr:"96-98 Bạch Đằng, Hải Châu 1, Hải Châu, Đà Nẵng", tip:"차로 8분 · 한강 뷰 · 코코넛 커피 · 7시~23시 30분" },
       { head:"호이안", ko:"파 라운지 호이안", vi:"Fa Lounge Hội An", addr:"82 Phan Châu Trinh, Cẩm Phô, Hội An, Quảng Nam", tip:"차로 45분 · 호이안 올드타운 안", thumb:"caolau" }
     ]},
 
@@ -1175,9 +1177,12 @@ function saveChecked(){
 }
 
 /* --- 홈 화면에 설치 ---
-   안드로이드 크롬은 beforeinstallprompt 로 진짜 설치 창을 띄울 수 있다.
-   아이폰 사파리는 애플이 그 API 를 막아놔서 안내만 보여준다.
-   이미 설치해서 열었으면 버튼을 아예 그리지 않는다. */
+   안드로이드·PC 크롬은 beforeinstallprompt 가 올 때만 진짜 설치가 된다.
+   그래서 그 이벤트가 오기 전에는 버튼을 띄우지 않는다.
+   이미 설치했으면 크롬은 이벤트를 보내지 않으므로 버튼도 안 뜬다.
+
+   아이폰 사파리는 애플이 그 API 를 막아놔서 설치 창을 띄울 방법이 없다.
+   여기서만 예외로 버튼을 먼저 띄우고 "공유 → 홈 화면에 추가" 안내를 보여준다. */
 let installEvent = null;
 
 const isStandalone = () =>
@@ -1188,9 +1193,44 @@ const isIOS = () =>
   /iPad|iPhone|iPod/.test(navigator.userAgent) ||
   (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
-function showInstallBtn(){
+/* 카카오톡 안에서 연 창은 진짜 브라우저가 아니라 앱에 딸린 화면이라
+   설치가 되지 않는다. 크롬·사파리로 넘겨보내는 수밖에 없다. */
+const isKakao = () => /KAKAOTALK/i.test(navigator.userAgent);
+
+function openExternal(){
+  /* 카카오톡이 알아듣는 주소. 기기의 기본 브라우저로 이 페이지를 다시 연다 */
+  location.href = "kakaotalk://web/openExternal?url=" + encodeURIComponent(location.href);
+  /* 이 주소를 못 알아듣는 카카오 버전도 있다.
+     그대로 남아 있으면 직접 여는 법을 알려준다 */
+  setTimeout(() => { if (!document.hidden) toast("오른쪽 위 ⋮ 에서 다른 브라우저로 열기"); }, 1500);
+}
+
+/* 설치를 마쳤는지 기억한다. 홈 화면 바로가기로 연 경우처럼
+   display-mode 가 standalone 이 아닌 채로 열려도 다시 권하지 않는다 */
+const INSTALL_KEY = "danang.installed.v1";
+const isInstalled = () => {
+  try { return localStorage.getItem(INSTALL_KEY) === "1"; } catch (e) { return false; }
+};
+function hideInstallBtn(){
   const b = $("#installbtn");
-  if (b) b.classList.add("on");
+  if (b) b.classList.remove("on");
+}
+function markInstalled(){
+  try { localStorage.setItem(INSTALL_KEY, "1"); } catch (e) {}
+  hideInstallBtn();
+}
+
+/* 버튼을 띄울지 말지는 여기 한 곳에서만 정한다 */
+function showInstallBtn(){
+  if (isStandalone() || isInstalled()) return;
+  const b = $("#installbtn");
+  if (!b) return;
+  /* 카카오 안에서는 설치가 아니라 브라우저로 넘어가는 버튼이다 */
+  if (isKakao()) {
+    const t = b.querySelector("span");
+    if (t) t.textContent = "브라우저에서 열기";
+  }
+  b.classList.add("on");
 }
 
 function renderHowto(){
@@ -1207,15 +1247,17 @@ function renderHowto(){
   if (c) c.focus();
 }
 
-/* 설치 버튼을 누르면: 크롬이면 바로 설치 창, 아니면 안내 */
+/* 설치 버튼을 누르면: 크롬이면 바로 설치 창, 아이폰이면 안내 */
 async function doInstall(){
+  /* 카카오 안에서는 설치할 방법이 없다. 먼저 밖으로 내보낸다 */
+  if (isKakao()) { openExternal(); return; }
+
   if (installEvent) {
     installEvent.prompt();
     const r = await installEvent.userChoice.catch(() => null);
     installEvent = null;
-    const b = $("#installbtn");
-    if (b) b.classList.remove("on");
-    if (r && r.outcome === "accepted") toast("설치했어요");
+    hideInstallBtn();
+    if (r && r.outcome === "accepted") { markInstalled(); toast("설치했어요"); }
     return;
   }
   renderHowto();
@@ -1229,8 +1271,7 @@ window.addEventListener("beforeinstallprompt", e => {
 
 window.addEventListener("appinstalled", () => {
   installEvent = null;
-  const b = $("#installbtn");
-  if (b) b.classList.remove("on");
+  markInstalled();
   toast("홈 화면에 추가했어요");
 });
 
@@ -1251,7 +1292,7 @@ function applyTheme(mode){
   for (const m of document.querySelectorAll('meta[name="theme-color"]')) m.remove();
   const meta = document.createElement("meta");
   meta.name = "theme-color";
-  meta.content = mode === "dark" ? "#101F16" : "#173A28";
+  meta.content = mode === "dark" ? "#101F16" : "#FBFBFA";
   document.head.appendChild(meta);
   const btn = $("#themebtn");
   if (btn) btn.setAttribute("aria-label", mode === "dark" ? "밝게 바꾸기" : "어둡게 바꾸기");
@@ -1324,17 +1365,6 @@ let fxVnd = 100000;
 const fxFmt = n => n.toLocaleString("ko-KR");
 const fxWon = vnd => Math.round(vnd / 1000 * FX_PER_1000);
 const fxLabel = v => (v >= 10000 ? v / 10000 + "만" : fxFmt(v));
-
-/* 메인의 한 줄 버튼 */
-function renderFxBar(){
-  $("#fxbar").innerHTML = `
-    <button class="fxbtn" id="fxOpen" type="button">
-      <span class="fxbtn-ico">₫</span>
-      <span class="fxbtn-label">환율 계산기</span>
-      <span class="fxbtn-hint">10만동 ≈ 5,500원</span>
-      <span class="fxbtn-go" aria-hidden="true"></span>
-    </button>`;
-}
 
 /* 팝업 속 계산기 */
 function renderFxBody(){
@@ -1657,6 +1687,14 @@ document.addEventListener("click", e => {
   }
 
   if (e.target.closest("#fxOpen")) { fxOpen(); return; }
+
+  /* 어느 탭에 있든 오늘 일정의 "지금" 자리로 데려다준다 */
+  if (e.target.closest("#nowJump")) {
+    setTab("plan");
+    const mark = $(".nowline") || $(".ti.is-now") || $("#brief");
+    if (mark) mark.scrollIntoView({ block: "center", behavior: "smooth" });
+    return;
+  }
   if (e.target.closest("#fxClose") || e.target.classList.contains("modal-back")) {
     $("#fxModal").hidden = true;
     return;
@@ -1724,9 +1762,9 @@ function boot(){
   if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
     navigator.serviceWorker.register("sw.js").catch(() => {});
   }
-  /* 아직 설치하지 않았고 웹으로 열었으면 버튼을 띄운다.
-     크롬의 설치 이벤트를 기다리면 첫 방문에 안 뜨는 일이 잦다. */
-  if (!isStandalone() && location.protocol.startsWith("http")) showInstallBtn();
+  /* 아이폰과 카카오 인앱 창은 버튼을 먼저 띄운다. 기다릴 설치 이벤트가 없다.
+     크롬 쪽은 beforeinstallprompt 가 오면 그때 뜬다. */
+  if ((isIOS() || isKakao()) && location.protocol.startsWith("http")) showInstallBtn();
 
   try {
     const saved = localStorage.getItem(THEME_KEY);
@@ -1739,7 +1777,6 @@ function boot(){
   state.day = idx >= 0 ? idx : 0;
 
   renderBrief();
-  renderFxBar();
   renderDaybar();
   renderTimeline();
   renderBookings();
