@@ -753,7 +753,15 @@ main{padding:0 16px}
 .jumpbtn svg{width:22px;height:22px}
 .jumpbtn[hidden]{display:none}
 
-/* 날짜를 밀어 넘길 때. 온 방향에서 들어온다 */
+/* 날짜 한 판. 미는 동안 옆 날짜를 실제로 붙여 두고 통째로 움직인다.
+   touch-action: pan-y 라서 세로 스크롤은 브라우저가, 가로는 우리가 맡는다 */
+.daywrap{position:relative;touch-action:pan-y}
+.daywrap.settle{transition:transform .24s cubic-bezier(.22,.61,.36,1)}
+.dayghost{position:absolute;top:0;width:100%}
+.dayghost.next{left:100%}
+.dayghost.prev{left:-100%}
+
+/* 날짜 바를 눌러 넘길 때. 온 방향에서 들어온다 */
 @keyframes slideFromR{from{opacity:0;transform:translateX(26px)}to{opacity:1;transform:none}}
 @keyframes slideFromL{from{opacity:0;transform:translateX(-26px)}to{opacity:1;transform:none}}
 .tl.from-r{animation:slideFromR .19s ease-out}
@@ -936,11 +944,13 @@ footer{padding:28px 4px 22px;font-size:13.5px;color:var(--ink2);text-align:cente
 <main>
   <section id="tab-plan" role="tabpanel" aria-labelledby="tabbtn-plan">
     <div id="brief"></div>
-    <div class="day-head">
-      <h2 id="dayTitle"></h2>
-      <p id="dayMeta"></p>
+    <div class="daywrap" id="dayWrap">
+      <div class="day-head">
+        <h2 id="dayTitle"></h2>
+        <p id="dayMeta"></p>
+      </div>
+      <div class="tl" id="timeline"></div>
     </div>
-    <div class="tl" id="timeline"></div>
   </section>
 
   <section id="tab-book" role="tabpanel" aria-labelledby="tabbtn-book" hidden></section>
@@ -1588,14 +1598,18 @@ function renderBrief(){
     </section>`;
 }
 
-function renderTimeline(){
-  const d = TRIP.days[state.day];
+const dayTitleText = i => `Day ${i + 1} · ${TRIP.days[i].theme}`;
+const dayMetaText = i => {
+  const d = TRIP.days[i];
+  return `${d.date.replace(/-/g, ".")} ${d.dow}요일 · 일정 ${d.items.length}개`;
+};
+
+/* 옆 날짜를 미리 그려 붙여야 하므로 그리는 일과 넣는 일을 나눠 둔다 */
+function timelineHTML(dayIdx){
+  const d = TRIP.days[dayIdx];
   const now = tzNow("Asia/Ho_Chi_Minh");
   const isToday = d.date === now.date;
   const nowMin = toMin(now.time);
-
-  $("#dayTitle").textContent = `Day ${state.day + 1} · ${d.theme}`;
-  $("#dayMeta").textContent = `${d.date.replace(/-/g, ".")} ${d.dow}요일 · 일정 ${d.items.length}개`;
 
   const mins = d.items.map(it => toMin(it.time) + (it.nextDay ? 1440 : 0));
   let nowIdx = -1, curIdx = -1;
@@ -1632,7 +1646,13 @@ function renderTimeline(){
   });
   if (isToday && nowIdx === d.items.length) rows.push(nowRow(now.time));
 
-  $("#timeline").innerHTML = rows.join("");
+  return rows.join("");
+}
+
+function renderTimeline(){
+  $("#dayTitle").textContent = dayTitleText(state.day);
+  $("#dayMeta").textContent = dayMetaText(state.day);
+  $("#timeline").innerHTML = timelineHTML(state.day);
 }
 const nowRow = t => `<div class="nowline"><span class="nowline-tag">지금 ${esc(t)}</span><span class="nowline-rule"></span></div>`;
 
@@ -1838,6 +1858,10 @@ function goDay(i){
   tl.classList.remove("from-r", "from-l");
   void tl.offsetWidth;                 /* 애니메이션을 다시 태우려면 한 번 끊어야 한다 */
   tl.classList.add(dir);
+  centerChip();
+}
+
+function centerChip(){
   const chip = $('.daychip[aria-current="true"]');
   if (chip) chip.scrollIntoView({ inline: "center", block: "nearest", behavior: motionOK ? "smooth" : "auto" });
 }
@@ -1863,26 +1887,89 @@ function updateJump(){
 window.addEventListener("scroll", updateJump, { passive: true });
 
 /* --- 좌우로 밀어 날짜 넘기기 ---
-   가로로 스크롤되는 줄 위에서는 넘기지 않는다. 그쪽 스크롤을 뺏으면 안 된다 */
-let swX = 0, swY = 0, swOn = false;
+   미는 동안 옆 날짜를 실제로 그려 옆에 세워두고 판 전체를 손가락만큼 옮긴다.
+   손을 떼면 남은 거리만 굴러가므로 끊기지 않는다.
+   가로로 스크롤되는 줄 위에서는 시작하지 않는다. 그쪽 스크롤을 뺏으면 안 된다 */
+const SWIPE_MIN = 58;
+let drag = null;
+
+function ghostFor(i, dir){
+  const g = document.createElement("div");
+  g.className = "dayghost " + (dir > 0 ? "next" : "prev");
+  g.setAttribute("aria-hidden", "true");
+  g.innerHTML = `<div class="day-head"><h2>${esc(dayTitleText(i))}</h2><p>${esc(dayMetaText(i))}</p></div>
+    <div class="tl">${timelineHTML(i)}</div>`;
+  return g;
+}
+
 document.addEventListener("touchstart", e => {
-  swOn = false;
+  drag = null;
   if (state.tab !== "plan" || e.touches.length !== 1) return;
-  if (e.target.closest(".daybar, .quick, .modal, .sheet, .seg")) return;
-  swX = e.touches[0].clientX;
-  swY = e.touches[0].clientY;
-  swOn = true;
+  if (e.target.closest(".daybar, .quick, .modal, .sheet, .seg, .credits, a, input")) return;
+  const w = $("#dayWrap");
+  if (!w) return;
+  drag = { x: e.touches[0].clientX, y: e.touches[0].clientY, dx: 0, axis: null, dir: 0, ghost: null, w };
 }, { passive: true });
 
-document.addEventListener("touchend", e => {
-  if (!swOn) return;
-  swOn = false;
-  const t = e.changedTouches[0];
-  const dx = t.clientX - swX, dy = t.clientY - swY;
-  /* 세로로 읽어 내려가는 화면이라 가로 판정을 넉넉히 잡는다 */
-  if (Math.abs(dx) < 62 || Math.abs(dx) < Math.abs(dy) * 1.6) return;
-  goDay(state.day + (dx < 0 ? 1 : -1));
-}, { passive: true });
+document.addEventListener("touchmove", e => {
+  if (!drag) return;
+  const dx = e.touches[0].clientX - drag.x;
+  const dy = e.touches[0].clientY - drag.y;
+
+  /* 첫 몇 픽셀로 가로인지 세로인지 정하고, 세로면 손을 뗀다 */
+  if (!drag.axis) {
+    if (Math.abs(dx) < 9 && Math.abs(dy) < 9) return;
+    if (Math.abs(dx) <= Math.abs(dy) * 1.3) { drag = null; return; }
+    drag.axis = "x";
+    drag.w.classList.remove("settle");
+  }
+  e.preventDefault();
+
+  const dir = dx < 0 ? 1 : -1;
+  if (dir !== drag.dir) {
+    if (drag.ghost) drag.ghost.remove();
+    drag.dir = dir;
+    const target = state.day + dir;
+    drag.ghost = (target >= 0 && target < TRIP.days.length) ? ghostFor(target, dir) : null;
+    if (drag.ghost) drag.w.appendChild(drag.ghost);
+  }
+  /* 첫날·마지막날에서는 고무줄처럼 조금만 따라온다 */
+  drag.dx = drag.ghost ? dx : dx * 0.3;
+  drag.w.style.transform = `translateX(${drag.dx}px)`;
+}, { passive: false });
+
+function dragEnd(){
+  if (!drag) return;
+  const d = drag;
+  drag = null;
+  if (d.axis !== "x") return;
+
+  const go = !!d.ghost && Math.abs(d.dx) >= SWIPE_MIN;
+  d.w.classList.add("settle");
+  d.w.style.transform = go ? `translateX(${d.dir > 0 ? "-100%" : "100%"})` : "translateX(0)";
+
+  let done = false;
+  const finish = () => {
+    if (done) return;
+    done = true;
+    d.w.removeEventListener("transitionend", finish);
+    d.w.classList.remove("settle");
+    d.w.style.transform = "";
+    if (d.ghost) d.ghost.remove();
+    if (go) {
+      state.day += d.dir;
+      renderDaybar();
+      renderTimeline();
+      centerChip();
+    }
+  };
+  d.w.addEventListener("transitionend", finish);
+  /* 애니메이션이 없거나(모션 줄이기) transitionend 를 놓쳐도 반드시 정리된다 */
+  setTimeout(finish, 340);
+}
+document.addEventListener("touchend", dragEnd, { passive: true });
+document.addEventListener("touchcancel", dragEnd, { passive: true });
+
 
 /* --- 이벤트 --- */
 document.addEventListener("click", e => {
