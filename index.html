@@ -62,8 +62,6 @@
   /* 그림자는 초록을 머금은 회색. 숲 그늘의 색이다 */
   --shadow:0 0 0 1px rgba(22,26,24,.07), 0 1px 2px rgba(22,26,24,.045), 0 8px 20px rgba(22,26,24,.06);
   --shadow-lift:0 0 0 1px rgba(22,26,24,.07), 0 2px 6px rgba(22,26,24,.10), 0 14px 30px rgba(22,26,24,.11);
-  /* 낮에는 카드에 테두리를 두지 않는다. 그림자와 면으로만 띄운다 */
-  --card-edge:transparent;
   --tonal:#DCE9DF;
   --sea-deep:#143826;
   --fx-ico:rgba(255,255,255,.18);
@@ -92,8 +90,6 @@
   --d-jade-t:#1B3624;
   --d-lantern-t:#2C210B;
   --d-clay-t:#302921;
-  /* 밤에는 그림자가 안 보이므로 아주 얇은 선으로 면을 나눈다 */
-  --d-card-edge:#2C4034;
   --d-tonal:#1E3125;
   --d-sea-deep:#4E9C79;
   --d-fx-ico:rgba(0,0,0,.16);
@@ -121,7 +117,6 @@
     --jade-t:var(--d-jade-t);
     --lantern-t:var(--d-lantern-t);
     --clay-t:var(--d-clay-t);
-    --card-edge:var(--d-card-edge);
     --tonal:var(--d-tonal);
     --sea-deep:var(--d-sea-deep);
     --fx-ico:var(--d-fx-ico);
@@ -199,25 +194,22 @@ a{color:inherit}
 
 /* 알약 버튼 줄. 흰 면이라 노랑 위에서 저절로 떠 보인다 */
 .quick{
-  display:flex;gap:9px;
-  margin:16px -20px 0;padding:0 20px 18px;
-  overflow-x:auto;-webkit-overflow-scrolling:touch;
-  scrollbar-width:none;
+  display:flex;flex-wrap:wrap;gap:8px;
+  margin:16px 0 0;padding:0 0 18px;
 }
-.quick::-webkit-scrollbar{display:none}
 .pill{
-  flex:none;display:inline-flex;align-items:center;gap:8px;
-  min-height:44px;padding:0 17px;
+  flex:none;display:inline-flex;align-items:center;gap:7px;
+  min-height:44px;padding:0 14px;
   border-radius:999px;
   background:#FFFFFF;color:#16240E;
-  font-size:14.5px;font-weight:750;white-space:nowrap;
+  font-size:14px;font-weight:750;white-space:nowrap;
   box-shadow:0 2px 7px rgba(72,48,0,.16);
 }
 .pill:active{transform:scale(.97)}
 .pill svg{width:17px;height:17px;flex:none}
 
 /* 그림 띠. 헤더 카드의 바닥을 채운다 */
-.hd-art{display:block;width:100%;height:126px}
+.hd-art{display:block;width:100%;height:113px}
 /* 밤에는 한 톤 낮춘다. 색면 자체는 그대로 둔다 */
 :root[data-theme="dark"] .hd-art{filter:brightness(.9) saturate(.92)}
 
@@ -270,7 +262,7 @@ a{color:inherit}
   padding:6px 0 2px;
 }
 .daybar-scroll{
-  display:flex;gap:12px;
+  display:flex;gap:6px;
   overflow-x:auto;
   padding:0 16px;
   scroll-snap-type:x proximity;
@@ -280,9 +272,9 @@ a{color:inherit}
 .daybar-scroll::-webkit-scrollbar{display:none}
 /* 날짜는 상자가 아니라 글자다. 고른 날 아래에만 황동빛 밑줄이 그어진다 */
 .daychip{
-  flex:none;scroll-snap-align:center;position:relative;
-  min-width:70px;min-height:58px;
-  padding:8px 6px 14px;
+  flex:1 1 auto;scroll-snap-align:center;position:relative;
+  min-width:52px;min-height:58px;
+  padding:8px 4px 14px;
   text-align:center;line-height:1.3;
   color:var(--ink2);
 }
@@ -611,7 +603,7 @@ main{padding:0 16px}
 }
 .card{
   background:var(--card);
-  border:1px solid var(--card-edge);
+  border:1px solid var(--sunny);
   border-radius:var(--r);
   padding:16px 17px 17px;
   margin-bottom:13px;
@@ -646,7 +638,7 @@ main{padding:0 16px}
 
 /* ── 준비물 ── */
 .prog{
-  background:var(--card);border:1px solid var(--card-edge);
+  background:var(--card);border:1px solid var(--sunny);
   border-radius:var(--r);padding:16px 17px;margin:18px 0 6px;
   box-shadow:var(--shadow);
 }
@@ -786,6 +778,11 @@ footer{padding:28px 4px 22px;font-size:13.5px;color:var(--ink2);text-align:cente
   *{transition:none !important;animation:none !important;scroll-behavior:auto !important}
   .btn:active{transform:none}
 }
+/* 아주 좁은 폰에서는 날짜 글자를 한 단계 줄여 다섯 칸이 다 들어가게 한다 */
+@media (max-width:360px){
+  .daychip b{font-size:15px}
+  .daychip span{font-size:12px}
+}
 @media (min-width:640px){
   body{font-size:19px}
   main,.daybar-scroll{max-width:640px;margin-left:auto;margin-right:auto}
@@ -850,16 +847,16 @@ footer{padding:28px 4px 22px;font-size:13.5px;color:var(--ink2);text-align:cente
     <rect width="390" height="168" fill="#FFC83D"/>
 
     <!-- 왼쪽 바위산. 매끈한 삼각형이 아니라 울퉁불퉁한 덩어리다 -->
-    <path d="M-20 96 L-6 56 L14 44 L34 27 L52 38 L64 31 L82 55 L96 47 L112 96 Z" fill="#9AA6AC"/>
-    <path d="M34 27 L52 38 L44 96 L18 96 Z" fill="#7C8990" opacity=".85"/>
+    <path d="M-20 96 L-6 58 L14 48 L34 34 L52 43 L64 37 L82 57 L96 50 L112 96 Z" fill="#9AA6AC"/>
+    <path d="M34 34 L52 43 L44 96 L18 96 Z" fill="#7C8990" opacity=".85"/>
     <g stroke="#6B7981" stroke-width="1.6" opacity=".7" fill="none">
-      <path d="M34 31 L28 50 L36 62"/><path d="M64 35 L70 54"/>
+      <path d="M34 38 L28 54 L36 64"/><path d="M64 41 L70 57"/>
     </g>
     <!-- 오른쪽 바위산 -->
-    <path d="M262 96 L280 62 L300 36 L318 47 L336 24 L358 44 L376 35 L404 96 Z" fill="#9AA6AC"/>
-    <path d="M336 24 L358 44 L352 96 L322 96 Z" fill="#7C8990" opacity=".85"/>
+    <path d="M262 96 L280 64 L300 42 L318 51 L336 33 L358 48 L376 41 L404 96 Z" fill="#9AA6AC"/>
+    <path d="M336 33 L358 48 L352 96 L322 96 Z" fill="#7C8990" opacity=".85"/>
     <g stroke="#6B7981" stroke-width="1.6" opacity=".7" fill="none">
-      <path d="M300 40 L294 58 L302 70"/><path d="M358 48 L364 68"/>
+      <path d="M300 46 L294 60 L302 70"/><path d="M358 52 L364 70"/>
     </g>
     <!-- 가운데 먼 언덕 -->
     <path d="M96 96 L140 66 L186 96 Z" fill="#B6C0C4"/>
@@ -903,7 +900,7 @@ footer{padding:28px 4px 22px;font-size:13.5px;color:var(--ink2);text-align:cente
     <path d="M-10 140 q120 -12 210 -2 q104 11 210 -8 v42 h-410 Z" fill="#2F7A4A"/>
 
     <!-- 카약을 세워 든 사람 -->
-    <g transform="translate(286 150)">
+    <g transform="translate(286 140)">
       <!-- 다리와 주황 반바지 -->
       <path d="M-7 -20 h14 v13 h-14 Z" fill="#E4572E"/>
       <path d="M-6 -8 h4.5 v10 h-4.5 Z M1.5 -8 h4.5 v10 h-4.5 Z" fill="#8A5A32"/>
@@ -916,7 +913,7 @@ footer{padding:28px 4px 22px;font-size:13.5px;color:var(--ink2);text-align:cente
       <path d="M-12 -48 L0 -60 L12 -48 Z" fill="#EFD9A0" stroke="#8A6A2E" stroke-width="1.2" stroke-linejoin="round"/>
     </g>
     <!-- 노란 카약 -->
-    <g transform="translate(330 96) rotate(9)">
+    <g transform="translate(330 90) rotate(9)">
       <rect x="-13" y="-58" width="26" height="128" rx="13" fill="#F5A623"/>
       <rect x="-13" y="-58" width="9" height="128" rx="4.5" fill="#FFC961"/>
       <ellipse cx="0" cy="6" rx="6.5" ry="17" fill="#C97C10"/>
@@ -1380,7 +1377,7 @@ function showInstallBtn(){
   /* 카카오 안에서는 설치가 아니라 브라우저로 넘어가는 버튼이다 */
   if (isKakao()) {
     const t = b.querySelector("span");
-    if (t) t.textContent = "브라우저에서 열기";
+    if (t) t.textContent = "브라우저로 열기";
   }
   b.classList.add("on");
 }
